@@ -84,6 +84,106 @@ interface BitcoinTransactionDetailsError {
 export type BitcoinTransactionDetailsResult =
   | BitcoinTransactionDetailsSuccess
   | BitcoinTransactionDetailsError;
+  
+// Types for Wallet Balance
+export interface WalletBalance {
+  balance: string;
+  symbol: string;
+}
+
+interface WalletBalanceSuccess {
+  data: WalletBalance | null;
+  error: null;
+}
+
+interface WalletBalanceError {
+  data: null;
+  error: string;
+}
+
+export type WalletBalanceResult = WalletBalanceSuccess | WalletBalanceError;
+
+export async function getEthereumBalance(
+  address: string
+): Promise<WalletBalanceResult> {
+  const QUICKNODE_ETHEREUM_RPC_URL = process.env.QUICKNODE_ETHEREUM_RPC_URL;
+  const QUICKNODE_ETHEREUM_API_KEY = process.env.QUICKNODE_ETHEREUM_API_KEY;
+
+  if (!QUICKNODE_ETHEREUM_RPC_URL || !QUICKNODE_ETHEREUM_API_KEY) {
+    return {
+      data: null,
+      error: 'Server configuration error: RPC endpoint or API Key is missing.',
+    };
+  }
+
+  if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
+    return { data: null, error: 'Invalid Ethereum address format.' };
+  }
+
+  const QUICKNODE_ENDPOINT = `${QUICKNODE_ETHEREUM_RPC_URL}${QUICKNODE_ETHEREUM_API_KEY}/`;
+
+  try {
+    const response = await fetch(QUICKNODE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_getBalance',
+        params: [address, 'latest'],
+        id: 1,
+      }),
+      next: { revalidate: 10 }, // Cache for 10 seconds
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `API request failed with status ${response.status}.`,
+      };
+    }
+
+    const json = await response.json();
+
+    if (json.error) {
+      return {
+        data: null,
+        error: json.error.message || 'An unknown JSON-RPC error occurred.',
+      };
+    }
+
+    const balanceHex = json.result;
+    const balanceWei = parseInt(balanceHex, 16);
+    const balanceEth = (balanceWei / 1e18).toFixed(8);
+
+    return { data: { balance: balanceEth, symbol: 'ETH' }, error: null };
+  } catch (e) {
+    if (e instanceof Error) {
+      return { data: null, error: e.message };
+    }
+    return {
+      data: null,
+      error: 'An unknown error occurred while fetching Ethereum balance.',
+    };
+  }
+}
+
+export async function getBitcoinBalance(
+  address: string
+): Promise<WalletBalanceResult> {
+  // Note: Bitcoin balance lookups are more complex than Ethereum.
+  // A common approach is to use a blockbook or indexer API.
+  // For this example, we'll simulate a lookup.
+  // In a real-world scenario, you would integrate with a service like BlockCypher, Blockchain.com API, or your own Bitcoin node with an indexer.
+
+  // This is a placeholder. Replace with a real Bitcoin balance API.
+  // This example does not use a real Bitcoin balance API.
+  return {
+    data: { balance: (Math.random() * 10).toFixed(8), symbol: 'BTC' },
+    error: null,
+  };
+}
 
 export async function getBitcoinTransactionDetails(
   transactionId: string

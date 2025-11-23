@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { BlockNumberClient } from '@/components/block-number-client';
+import { WalletBalanceClient } from '@/components/wallet-balance-client';
 import {
   Select,
   SelectContent,
@@ -33,6 +34,7 @@ export default function Home() {
             </SelectContent>
           </Select>
         </Card>
+        <WalletBalanceClient selectedChain={selectedChain} />
         <BlockNumberClient selectedChain={selectedChain} />
       </div>
       <footer className="text-center text-muted-foreground text-xs sm:text-sm">
