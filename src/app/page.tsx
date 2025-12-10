@@ -21,6 +21,7 @@ export default function Home() {
     <main className="flex min-h-screen w-full flex-col items-center gap-8 p-4 sm:p-8 bg-background font-body">
       <div className="w-full max-w-md space-y-4">
         <Card className="p-4 bg-card/80 backdrop-blur-sm border-primary/10 shadow-lg">
+          <p className="text-sm font-medium text-muted-foreground mb-2 block">version 12.10_11.59</p>
           <label htmlFor="blockchain-select" className="text-sm font-medium text-muted-foreground mb-2 block">
             Select Blockchain
           </label>
