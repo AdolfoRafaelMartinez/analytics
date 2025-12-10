@@ -9,11 +9,9 @@ interface WalletGroupProps {
   btc: number;
   eth: number;
   balanceHistory: any[];
-  transactionsIn: { eth: number; btc: number };
-  transactionsOut: { eth: number; btc: number };
 }
 
-export function WalletGroup({ title, walletCount, btc, eth, balanceHistory, transactionsIn, transactionsOut }: WalletGroupProps) {
+export function WalletGroup({ title, walletCount, btc, eth, balanceHistory }: WalletGroupProps) {
   return (
     <Card className="w-full max-w-sm p-4 bg-card/80 backdrop-blur-sm border-primary/10 shadow-lg">
       <div className="flex justify-between items-start mb-4">
@@ -53,16 +51,22 @@ export function WalletGroup({ title, walletCount, btc, eth, balanceHistory, tran
 
       <div>
         <p className="text-sm text-muted-foreground">Transaction History</p>
-        <div className="flex justify-between items-center my-2">
-          <div className="p-2 border rounded-md text-center">
-            <p className="text-lg font-bold">{transactionsOut.eth} ETH</p>
-            <p className="text-lg font-bold">{transactionsOut.btc} BTC</p>
+        <div className="my-2 space-y-2">
+          <div className="flex justify-between">
+            <span>Sent BTC</span>
+            <span>-0.005 BTC</span>
           </div>
-          <p className="text-muted-foreground">OUT</p>
-          <p className="text-muted-foreground">IN</p>
-          <div className="p-2 border rounded-md text-center">
-            <p className="text-lg font-bold">{transactionsIn.eth} ETH</p>
-            <p className="text-lg font-bold">{transactionsIn.btc} BTC</p>
+          <div className="flex justify-between">
+            <span>Received ETH</span>
+            <span>+0.1 ETH</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Swapped BTC for ETH</span>
+            <span>-0.002 BTC</span>
+          </div>
+          <div className="flex justify-between">
+            <span></span>
+            <span>+0.05 ETH</span>
           </div>
         </div>
       </div>
