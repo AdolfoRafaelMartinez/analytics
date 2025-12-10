@@ -1,57 +1,60 @@
 'use client';
 
-import { useState } from 'react';
-import { BlockNumberClient } from '@/components/block-number-client';
-import { WalletBalanceClient } from '@/components/wallet-balance-client';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Card } from '@/components/ui/card';
+import { WalletGroup } from '@/components/wallet-group';
 
-type Blockchain = 'ethereum' | 'bitcoin';
+const coldBalanceHistory = [
+  { name: 'Mar 1', uv: 50.00 },
+  { name: 'Mar 11', uv: 50.00 },
+  { name: 'Mar 1', uv: 50.00 },
+  { name: 'Mar 31', uv: 60.00 },
+];
+
+const treasuryBalanceHistory = [
+    { name: 'Mar 1', uv: 40.00 },
+    { name: 'Mar 11', uv: 60.00 },
+    { name: 'Mar 1', uv: 55.00 },
+    { name: 'Mar 31', uv: 58.00 },
+];
+
+const clientBalanceHistory = [
+    { name: 'Mar 1', uv: 50.00 },
+    { name: 'Mar 11', uv: 50.00 },
+    { name: 'Mar 1', uv: 50.00 },
+    { name: 'Mar 31', uv: 50.00 },
+];
 
 export default function Home() {
-  const [selectedChain, setSelectedChain] = useState<Blockchain>('ethereum');
-
   return (
     <main className="flex min-h-screen w-full flex-col items-center gap-8 p-4 sm:p-8 bg-background font-body">
-      <div className="w-full max-w-md space-y-4">
-        <Card className="p-4 bg-card/80 backdrop-blur-sm border-primary/10 shadow-lg">
-          <p className="text-sm font-medium text-muted-foreground mb-2 block">version 12.10_11.59</p>
-          <label htmlFor="blockchain-select" className="text-sm font-medium text-muted-foreground mb-2 block">
-            Select Blockchain
-          </label>
-          <Select value={selectedChain} onValueChange={(value) => setSelectedChain(value as Blockchain)}>
-            <SelectTrigger id="blockchain-select" className="w-full">
-              <SelectValue placeholder="Select a blockchain" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ethereum">Ethereum (sepolia)</SelectItem>
-              <SelectItem value="bitcoin">Bitcoin (testnet4)</SelectItem>
-            </SelectContent>
-          </Select>
-        </Card>
-        <WalletBalanceClient selectedChain={selectedChain} />
-        <BlockNumberClient selectedChain={selectedChain} />
+      <div className="flex flex-wrap justify-center gap-8">
+        <WalletGroup 
+          title="COLD" 
+          walletCount={2} 
+          btc={3} 
+          eth={3} 
+          balanceHistory={coldBalanceHistory} 
+          transactionsIn={{ eth: 3, btc: 3 }} 
+          transactionsOut={{ eth: 0, btc: 0 }}
+        />
+        <WalletGroup 
+          title="TREASURY" 
+          walletCount={10} 
+          btc={3} 
+          eth={3} 
+          balanceHistory={treasuryBalanceHistory} 
+          transactionsIn={{ eth: 3, btc: 3 }} 
+          transactionsOut={{ eth: 0, btc: 0 }}
+        />
+        <WalletGroup 
+          title="CLIENT" 
+          walletCount={3000} 
+          btc={0} 
+          eth={0} 
+          balanceHistory={clientBalanceHistory} 
+          transactionsIn={{ eth: 3, btc: 3 }} 
+          transactionsOut={{ eth: 3, btc: 3 }}
+        />
       </div>
-      <footer className="text-center text-muted-foreground text-xs sm:text-sm">
-        <p>
-          Powered by{' '}
-          <a
-            href="https://www.quicknode.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-primary underline-offset-4 hover:underline"
-          >
-            QuickNode
-          </a>
-          .
-        </p>
-      </footer>
     </main>
   );
 }
