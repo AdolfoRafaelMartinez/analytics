@@ -6,7 +6,7 @@ var raw = JSON.stringify({
   "jsonrpc": "2.0",
   "method": "eth_getBalance",
   "params": [
-    "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe",
+    "0xb18A9379E29fd7776BA69C0C3949E24BEF34177b",
     "latest"
   ]
 });
@@ -18,7 +18,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("https://attentive-lingering-isle.sepolia.quiknode.pro/269f89a463c647898299abddd6a583e25b16df8d/", requestOptions)
+fetch("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/", requestOptions)
   .then(response => response.json())
   .then(result => {
     const balanceInWei = parseInt(result.result, 16);
