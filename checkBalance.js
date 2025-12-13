@@ -1,41 +1,29 @@
-import axios from 'axios';
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
 
-// IMPORTANT: Replace with your QuickNode endpoint URL
-// You can get one for free at https://www.quicknode.com/
-const QUICKNODE_URL = 'https://wispy-muddy-mound.btc-testnet4.quiknode.pro/9d3168def96c68f2c77df93184521a4ac1aa661f/';
+var raw = JSON.stringify({
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "bb_getAddress",
+    "params": [
+        "2NAVfT2MEKVoaZmsbRtZ7t2oqyT1xV7u8h1",
+        {
+            "page": 1,
+            "size": 1000,
+            "fromHeight": 0,
+            "details": "txids"
+        }
+    ]
+});
 
-async function getTestnetBalance(address) {
-  if (QUICKNODE_URL === 'YOUR_QUICKNODE_URL_HERE') {
-    console.error('Please replace "YOUR_QUICKNODE_URL_HERE" with your actual QuickNode endpoint URL in checkBalance.js');
-    return;
-  }
+var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+};
 
-  try {
-    const response = await axios.post(QUICKNODE_URL, {
-        id: 1,
-        jsonrpc: "2.0",
-        method: "getbestblockhash",
-        params: []
-        // method: 'getaddressutxos',
-        // params: [{'addresses': [address]}]
-    });
-
-    if (response.data.error) {
-      console.error('Error fetching balance from QuickNode:', response.data.error.message);
-      return;
-    }
-
-    const utxos = response.data.result;
-    const balance = utxos.reduce((acc, utxo) => acc + utxo.satoshis, 0);
-
-    console.log(`Address: ${address}`);
-    console.log(`Balance: ${balance} satoshis`);
-    return balance;
-  } catch (error) {
-    console.error('Error fetching balance:', error.message);
-  }
-}
-
-// Replace with the testnet address you want to check
-const testnetAddress = 'tb1qn9rvr53m7qvrpysx48svuxsgahs88xfsskx367';
-getTestnetBalance(testnetAddress);
+fetch("https://wispy-muddy-mound.btc-testnet4.quiknode.pro/9d3168def96c68f2c77df93184521a4ac1aa661f/", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
