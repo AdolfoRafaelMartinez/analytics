@@ -1,6 +1,6 @@
 import { ethers } from '/node_modules/ethers/dist/ethers.js';
 
-document.getElementById('createWalletBtn').addEventListener('click', async () => {
+const getBalance = async () => {
     const address = document.getElementById('addressInput').value;
     const resultDiv = document.getElementById('walletInfo');
     const spinner = document.getElementById('spinner');
@@ -24,8 +24,6 @@ document.getElementById('createWalletBtn').addEventListener('click', async () =>
     } finally {
         spinner.style.display = 'none';
     }
-});
+};
 
-document.getElementById('addressInput').addEventListener('change', () => {
-    document.getElementById('createWalletBtn').click();
-});
+document.getElementById('addressInput').addEventListener('change', getBalance);
