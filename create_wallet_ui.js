@@ -1,4 +1,4 @@
-import { ethers } from './node_modules/ethers/dist/ethers.esm.js';
+import { ethers } from '/node_modules/ethers/dist/ethers.esm.js';
 
 document.getElementById('createWalletBtn').addEventListener('click', async () => {
     const address = document.getElementById('addressInput').value;
