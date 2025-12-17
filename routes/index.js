@@ -6,6 +6,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views', 'index.html'));
+});
+
 router.get('/get_accounts', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'get_accounts.html'));
 });
