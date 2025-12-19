@@ -19,7 +19,6 @@ createWalletBtn.addEventListener('click', () => {
                     <p>Path:<strong> ${key.path}</strong></p>
                     <p>Address: ${key.address}</p>
                     <p>Private Key: (wif) ${key.privateKey}</p>
-                    <p>Public Key: (wif)${key.publicKey}</p>
                 </div>
             `;
         });
