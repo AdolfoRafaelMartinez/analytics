@@ -25,13 +25,13 @@ createWalletBtn.addEventListener('click', () => {
         });
         walletInfoDiv.innerHTML = `
             <p><strong>mnemonic:</strong> ${wallet.mnemonic}</p>
-            <div style="text-align: center; font-size: 2em; margin: 0.5em 0;">&darr;</div>
+            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
             <p><strong>seed:</strong> ${wallet.seed.toBase64()}</p>
-            <div style="text-align: center; font-size: 2em; margin: 0.5em 0;">+</div>
+            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">+</div>
             <p><strong>network:</strong> ${(wallet.network.messagePrefix.toLowerCase().includes("bitcoin")) ? "bitcoin test" : "unknown"}</p>
-            <div style="text-align: center; font-size: 2em; margin: 0.5em 0;">&darr;</div>
+            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
             <p><strong>root:</strong> ${wallet.root.chainCode.toBase64()}</p>
-            <div style="text-align: center; font-size: 2em; margin: 0.5em 0;">&darr;</div>
+            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
             <h2>derived key pairs:</h2>
             ${childKeysHtml}
             <hr>
