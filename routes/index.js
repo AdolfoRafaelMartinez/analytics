@@ -10,12 +10,16 @@ router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
 
-router.get('/hd_derivations', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views', 'hd_derivations.html'));
+router.get('/create_mnemonic', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'create_mnemonic.html'));
 });
 
 router.get('/create_hd_wallet', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views', 'create_hd_wallet.html'));
+    res.sendFile(path.join(__dirname, '../views', 'create_hd_wallet.html'));
+});
+
+router.get('/hd_derivations', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views', 'hd_derivations.html'));
 });
 
 router.get('/eth_balance', (req, res) => {
