@@ -22,6 +22,11 @@
     <h1>create hd wallet</h1>
     <label for="mnemonicInput">Mnemonic Phrase:</label><br>
     <textarea id="mnemonicInput" rows="3" cols="30" placeholder="Enter your mnemonic phrase"></textarea><br>
+    <label for="networkSelector">Blockchain:</label><br>
+    <select id="networkSelector">
+        <option value="bitcoin_testnet">Bitcoin Testnet</option>
+        <option value="ethereum_sepolia">Ethereum Sepolia</option>
+    </select><br><br>
     <button id="createWalletBtn">Create Wallet</button>
     <div id="spinner" style="display: none;">Loading...</div>
     <div id="walletInfo"></div>

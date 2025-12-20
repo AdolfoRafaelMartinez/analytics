@@ -8,22 +8,35 @@ import { Buffer } from 'buffer';
 const ECPair = ECPairFactory(ecc);
 const bip32 = BIP32Factory(ecc);
 
-const network = bitcoin.networks.testnet;
 const path_prefix = `m/49'/1'/0'/0`; 
 
-export function createHDWallet(mnemonic) {
+export function createHDWallet(mnemonic, networkType) {
+  let network;
+  if (networkType === 'bitcoin_testnet') {
+    network = bitcoin.networks.testnet;
+  } else {
+    network = { name: networkType };
+  }
+
   const seed = bip39.mnemonicToSeedSync(mnemonic); 
   const root = bip32.fromSeed(seed, network);
   const childKeys = [];
+
   for (let i = 0; i <= 10; i++) {
     const childAccount = root.derivePath(`${path_prefix}/${i}`);
-    const { address: childAddress } = bitcoin.payments.p2sh({
-        redeem: bitcoin.payments.p2wpkh({
-            pubkey: Buffer.from(childAccount.publicKey),
+    let childAddress = "Not implemented for this network";
+
+    if (networkType === 'bitcoin_testnet') {
+        const { address } = bitcoin.payments.p2sh({
+            redeem: bitcoin.payments.p2wpkh({
+                pubkey: Buffer.from(childAccount.publicKey),
+                network
+            }),
             network
-        }),
-        network
-    });
+        });
+        childAddress = address;
+    }
+
     childKeys.push({
         path: `${path_prefix}/${i}`,
         address: childAddress,

@@ -3,6 +3,7 @@ const createWalletBtn = document.getElementById('createWalletBtn');
 const walletInfoDiv = document.getElementById('walletInfo');
 const spinner = document.getElementById('spinner');
 const mnemonicInput = document.getElementById('mnemonicInput');
+const networkSelector = document.getElementById('networkSelector');
 
 createWalletBtn.addEventListener('click', () => {
     walletInfoDiv.innerHTML = '';
@@ -12,9 +13,11 @@ createWalletBtn.addEventListener('click', () => {
         const mnemonic = mnemonicInput.value.trim();
         if (!mnemonic) {
             walletInfoDiv.innerHTML = 'Please enter a mnemonic phrase.';
+            spinner.style.display = 'none';
             return;
         }
-        const wallet = createHDWallet(mnemonic);
+        const network = networkSelector.value;
+        const wallet = createHDWallet(mnemonic, network);
         let childKeysHtml = '';
         wallet.childKeys.forEach(key => {
             childKeysHtml += `
@@ -27,14 +30,15 @@ createWalletBtn.addEventListener('click', () => {
                 <hr>
             `;
         });
+
         walletInfoDiv.innerHTML = `
-            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
-            <p><strong>seed:</strong> ${wallet.seed.toBase64()}</p>
-            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">+</div>
-            <p><strong>network:</strong> ${(wallet.network.messagePrefix.toLowerCase().includes("bitcoin")) ? "bitcoin test" : "unknown"}</p>
-            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
-            <p><strong>root:</strong> ${wallet.root.chainCode.toBase64()}</p>
-            <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">&darr;</div>
+            <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
+            <p><strong>seed:</strong> ${wallet.seed.toString('base64')}</p>
+            <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">+</div>
+            <p><strong>network:</strong> ${network}</p>
+            <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
+            <p><strong>root:</strong> ${wallet.root.chainCode.toString('base64')}</p>
+            <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
             <h3>children:</h3>
             ${childKeysHtml}
             <hr>
