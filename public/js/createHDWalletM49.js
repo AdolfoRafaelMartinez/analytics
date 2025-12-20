@@ -4,6 +4,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import bip39 from 'bip39';
 import { BIP32Factory } from 'bip32';
 import { Buffer } from 'buffer';
+import { ethers } from "ethers";
 
 const ECPair = ECPairFactory(ecc);
 const bip32 = BIP32Factory(ecc);
@@ -42,39 +43,21 @@ export function create_hd_wallet_bitcoin(mnemonic) {
         childKeys
     };
 }
-export function create_hd_wallet_ethereum(mnemonic, networkType) {
-    const wallet = ethers.Wallet.fromPhrase(mnemonic);
-
-    // const seed = bip39.mnemonicToSeedSync(mnemonic);
-    // const root = bip32.fromSeed(seed, network);
+export function create_hd_wallet_ethereum(mnemonic) {
+    const root = ethers.HDNodeWallet.fromPhrase(mnemonic);
     const childKeys = [];
 
-    for (let i = 0; i <= 10; i++) {
-        const childAccount = root.derivePath(`${path_prefix}/${i}`);
-        let childAddress = "Not implemented for this network";
-
-        if (networkType === 'bitcoin_testnet') {
-            const { address } = bitcoin.payments.p2sh({
-                redeem: bitcoin.payments.p2wpkh({
-                    pubkey: Buffer.from(childAccount.publicKey),
-                    network
-                }),
-                network
-            });
-            childAddress = address;
-        }
-
+    for (let i = 0; i < 10; i++) {
+        const childNode = root.derivePath(`m/44'/60'/0'/0/${i}`);
         childKeys.push({
-            path: `${path_prefix}/${i}`,
-            address: childAddress,
-            privateKey: childAccount.privateKey.toString('hex'),
-            publicKey: childAccount.publicKey.toString('hex')
+            path: `m/44'/60'/0'/0/${i}`,
+            address: childNode.address,
+            privateKey: childNode.privateKey,
+            publicKey: childNode.publicKey,
         });
     }
 
     return {
-        seed,
-        network,
         root,
         childKeys
     };
