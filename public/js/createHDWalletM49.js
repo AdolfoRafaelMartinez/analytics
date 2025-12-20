@@ -44,13 +44,14 @@ export function create_hd_wallet_bitcoin(mnemonic) {
     };
 }
 export function create_hd_wallet_ethereum(mnemonic) {
-    const root = ethers.HDNodeWallet.fromPhrase(mnemonic);
+    const mnemonicObj = ethers.Mnemonic.fromPhrase(mnemonic);
+    const accountNode = ethers.HDNodeWallet.fromMnemonic(mnemonicObj, "m/44'/60'/0'/0");
     const childKeys = [];
 
     for (let i = 0; i < 10; i++) {
-        const childNode = root.derivePath(`m/44'/60'/0'/0/${i}`);
+        const childNode = accountNode.derivePath(String(i));
         childKeys.push({
-            path: `m/44'/60'/0'/0/${i}`,
+            path: childNode.path,
             address: childNode.address,
             privateKey: childNode.privateKey,
             publicKey: childNode.publicKey,
@@ -58,7 +59,7 @@ export function create_hd_wallet_ethereum(mnemonic) {
     }
 
     return {
-        root,
+        root: accountNode,
         childKeys
     };
 }
