@@ -44,26 +44,3 @@ createWalletBtn.addEventListener('click', () => {
         spinner.style.display = 'none';
     }
 });
-
-saveMnemonicBtn.addEventListener('click', () => {
-    const mnemonic = mnemonicInput.value.trim();
-    if (mnemonic) {
-        fetch('/save-mnemonic', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ mnemonic })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-        })
-        .catch(error => {
-            console.error('Error saving mnemonic:', error);
-            alert('Error saving mnemonic');
-        });
-    } else {
-        alert('Mnemonic phrase is empty');
-    }
-});
