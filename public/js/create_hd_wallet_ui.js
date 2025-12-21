@@ -63,8 +63,12 @@ createWalletBtn.addEventListener('click', () => {
             });
 
             walletInfoHtml = `
+                <br>
+                <h3>parent:</h3>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
-                <p><strong>root:</strong> ${wallet.root.mnemonic.phrase}</p>
+                <p>address: ${wallet.root.address}</p>
+                <p>privateKey: ${wallet.root.privateKey}</p>
+                <p>publicKey: ${wallet.root.publicKey}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
                 <h3>children:</h3>
                 ${childKeysHtml}
