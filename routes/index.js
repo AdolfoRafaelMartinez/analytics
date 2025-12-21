@@ -36,8 +36,8 @@ router.get('/transfer_eth', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
 
-router.get('/first_request', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'first_request.html'));
+router.get('/latest_btc_block', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'latest_btc_block.html'));
 });
 
 router.post('/save-mnemonic', (req, res) => {
