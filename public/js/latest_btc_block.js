@@ -18,8 +18,8 @@ var requestOptions = {
 };
 
 fetch(QUICKNODE_URL, requestOptions)
-    .then(response => response.text())
+    .then(response => response.json())
     .then(result => {
-        document.getElementById('output').textContent = result;
+        document.getElementById('output').textContent = JSON.stringify(result, null, 2);
     })
     .catch(error => console.log('error', error));
