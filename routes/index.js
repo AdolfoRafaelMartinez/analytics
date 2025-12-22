@@ -45,7 +45,7 @@ router.get('/get_btc_balance', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_btc_balance.html'));
 });
 
-router.post('/get-btc-balance', async (req, res) => {
+router.post('/get_btc_balance', async (req, res) => {
     const { address } = req.body;
 
     try {

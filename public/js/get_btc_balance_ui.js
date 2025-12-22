@@ -1,7 +1,7 @@
-document.getElementById('getBalanceBtn').addEventListener('click', async () => {
-    const address = document.getElementById('addressInput').value;
+document.getElementById('get_balance_button').addEventListener('click', async () => {
+    const address = document.getElementById('address_input').value;
     const spinner = document.getElementById('spinner');
-    const walletInfo = document.getElementById('walletInfo');
+    const wallet_info_div = document.getElementById('wallet_info_div');
 
     if (!address) {
         alert('Please enter a Bitcoin address.');
@@ -9,10 +9,10 @@ document.getElementById('getBalanceBtn').addEventListener('click', async () => {
     }
 
     spinner.style.display = 'block';
-    walletInfo.innerHTML = '';
+    wallet_info_div.innerHTML = '';
 
     try {
-        const response = await fetch('/get-btc-balance', {
+        const response = await fetch('/get_btc_balance', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,11 +26,11 @@ document.getElementById('getBalanceBtn').addEventListener('click', async () => {
             throw new Error(data.error);
         }
 
-        walletInfo.innerHTML = `<p>Balance: ${data.balance} BTC</p>`;
+        wallet_info_div.innerHTML = `<p>Balance: ${data.balance} BTC</p>`;
 
     } catch (error) {
         console.error('Error fetching balance:', error);
-        walletInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        wallet_info_div.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
     } finally {
         spinner.style.display = 'none';
     }
