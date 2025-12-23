@@ -4,6 +4,26 @@ const walletInfoDiv = document.getElementById('walletInfo');
 const spinner = document.getElementById('spinner');
 const mnemonicInput = document.getElementById('mnemonicInput');
 const networkSelector = document.getElementById('networkSelector');
+const walletFile = document.getElementById('walletFile');
+
+walletFile.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const walletData = JSON.parse(e.target.result);
+                mnemonicInput.textContent = walletData.mnemonic;
+                networkSelector.innerHTML = walletData.network;
+                createWallet();
+            } catch (error) {
+                console.error('Error parsing wallet file:', error);
+                alert('Error parsing wallet file. Please make sure it is a valid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+    }
+});
 
 function createWallet() {
     walletInfoDiv.innerHTML = '';
