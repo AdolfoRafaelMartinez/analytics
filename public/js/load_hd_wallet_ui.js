@@ -100,16 +100,3 @@ function createWallet() {
         spinner.style.display = 'none';
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/load_wallet_data')
-        .then(response => response.json())
-        .then(data => {
-            mnemonicInput.textContent = data.mnemonic;
-            networkSelector.innerHTML = data.network;
-            createWallet();
-        })
-        .catch(error => {
-            console.error('Error loading wallet data:', error);
-        });
-});
