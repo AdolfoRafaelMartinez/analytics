@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.mnemonic) {
-                mnemonicInput.value = data.mnemonic;
+                mnemonicInput.textContent = data.mnemonic;
             }
         })
         .catch(error => {
@@ -24,17 +24,18 @@ createWalletBtn.addEventListener('click', () => {
     spinner.style.display = 'block';
 
     try {
-        const mnemonic = mnemonicInput.value.trim();
+        const mnemonic = mnemonicInput.textContent.trim();
         if (!mnemonic) {
             walletInfoDiv.innerHTML = 'Please enter a mnemonic phrase.';
             spinner.style.display = 'none';
             return;
         }
         const network = networkSelector.value;
+        let wallet;
         let walletInfoHtml = '';
 
         if (network === 'bitcoin_testnet') {
-            const wallet = create_hd_wallet_bitcoin(mnemonic);
+            wallet = create_hd_wallet_bitcoin(mnemonic);
             let childKeysHtml = '';
             wallet.childKeys.forEach(key => {
                 childKeysHtml += `
@@ -61,7 +62,7 @@ createWalletBtn.addEventListener('click', () => {
                 <hr>
             `;
         } else if (network === 'ethereum_sepolia') {
-            const wallet = create_hd_wallet_ethereum(mnemonic);
+            wallet = create_hd_wallet_ethereum(mnemonic);
             let childKeysHtml = '';
             wallet.childKeys.forEach(key => {
                 childKeysHtml += `
@@ -90,6 +91,18 @@ createWalletBtn.addEventListener('click', () => {
         } else {
             alert("oh oh!");
         }
+
+        // Save the entire wallet object
+        fetch('/save-mnemonic', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(wallet),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error saving wallet:', error));
 
         walletInfoDiv.innerHTML = walletInfoHtml;
     } catch (error) {
