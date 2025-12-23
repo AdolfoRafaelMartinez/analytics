@@ -1,25 +1,11 @@
 import { ethers } from "ethers";
 import { create_hd_wallet_bitcoin, create_hd_wallet_ethereum } from './createHDWalletM49.js';
-const createWalletBtn = document.getElementById('createWalletBtn');
 const walletInfoDiv = document.getElementById('walletInfo');
 const spinner = document.getElementById('spinner');
 const mnemonicInput = document.getElementById('mnemonicInput');
 const networkSelector = document.getElementById('networkSelector');
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/load_wallet_data')
-        .then(response => response.json())
-        .then(data => {
-            if (data.mnemonic) {
-                mnemonicInput.textContent = data.mnemonic;
-            }
-        })
-        .catch(error => {
-            console.error('Error loading wallet data:', error);
-        });
-});
-
-createWalletBtn.addEventListener('click', () => {
+function createWallet() {
     walletInfoDiv.innerHTML = '';
     spinner.style.display = 'block';
 
@@ -98,4 +84,18 @@ createWalletBtn.addEventListener('click', () => {
     } finally {
         spinner.style.display = 'none';
     }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/load_wallet_data')
+        .then(response => response.json())
+        .then(data => {
+            if (data.mnemonic) {
+                mnemonicInput.textContent = data.mnemonic;
+                createWallet(); // Automatically create wallet after loading mnemonic
+            }
+        })
+        .catch(error => {
+            console.error('Error loading wallet data:', error);
+        });
 });
