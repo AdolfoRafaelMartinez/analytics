@@ -10,13 +10,8 @@ function createWallet() {
     spinner.style.display = 'block';
 
     try {
-        const mnemonic = mnemonicInput.textContent.trim();
-        if (!mnemonic) {
-            walletInfoDiv.innerHTML = 'Please enter a mnemonic phrase.';
-            spinner.style.display = 'none';
-            return;
-        }
-        const network = networkSelector.value;
+        const mnemonic = mnemonicInput.textContent;
+        const network = networkSelector.innerHTML;
         let wallet;
         let walletInfoHtml = '';
 
@@ -47,7 +42,7 @@ function createWallet() {
                 ${childKeysHtml}
                 <hr>
             `;
-        } else if (network === 'ethereum_sepolia') {
+        } else if (network === 'ethereum-sepolia') {
             wallet = create_hd_wallet_ethereum(mnemonic);
             let childKeysHtml = '';
             wallet.childKeys.forEach(key => {
@@ -90,10 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/load_wallet_data')
         .then(response => response.json())
         .then(data => {
-            if (data.mnemonic) {
-                mnemonicInput.textContent = data.mnemonic;
-                createWallet(); // Automatically create wallet after loading mnemonic
-            }
+            mnemonicInput.textContent = data.mnemonic;
+            networkSelector.innerHTML = data.network;
+            createWallet();
         })
         .catch(error => {
             console.error('Error loading wallet data:', error);
