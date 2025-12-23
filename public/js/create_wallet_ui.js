@@ -1,53 +1,64 @@
 
-import bip39 from "bip39";
+import * as bip39 from "bip39";
 
 document.addEventListener('DOMContentLoaded', () => {
-    const mnemonic_info_element = document.getElementById('mnemonic_info_div');
-    const spinner = document.getElementById('spinner');
+    const mnemonic_textarea = document.getElementById('mnemonic_textarea');
+    const generate_mnemonic_button = document.getElementById('generate_mnemonic_button');
     const save_mnemonic_button = document.getElementById('save_mnemonic_button');
     const network_select = document.getElementById('network_select');
+    const wallet_filename_input = document.getElementById('wallet_filename');
+    const spinner = document.getElementById('spinner');
+
+    function generateMnemonic() {
+        spinner.style.display = 'block';
+        try {
+            const mnemonic = bip39.generateMnemonic();
+            mnemonic_textarea.value = mnemonic;
+        } catch (error) {
+            console.error('Error creating mnemonic:', error);
+            alert('Error creating mnemonic. Please try again.');
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
 
     // Generate and display mnemonic on page load
-    spinner.style.display = 'block';
-    try {
-        const mnemonic = bip39.generateMnemonic();
-        mnemonic_info_element.innerHTML = `
-            <p><strong>mnemonic:</strong> <span id="mnemonic_text">${mnemonic}</span></p>
-        `;
-    } catch (error) {
-        console.error('Error creating mnemonic:', error);
-        mnemonic_info_element.innerHTML = "Error creating mnemonic. Please try again.";
-    } finally {
-        spinner.style.display = 'none';
-    }
+    generateMnemonic();
+
+    // Add event listener to the generate mnemonic button
+    generate_mnemonic_button.addEventListener('click', generateMnemonic);
 
     // Add event listener to the save button
     save_mnemonic_button.addEventListener('click', () => {
-        const mnemonicTextElement = document.getElementById('mnemonic_text');
-        if (mnemonicTextElement) {
-            const mnemonic = mnemonicTextElement.innerText;
-            const network = network_select.value;
-            spinner.style.display = 'block';
+        const mnemonic = mnemonic_textarea.value.trim();
+        const network = network_select.value;
+        const filename = wallet_filename_input.value;
 
-            fetch('/save-mnemonic', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ mnemonic, network }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                alert('Mnemonic saved successfully!');
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Error saving mnemonic.');
-            })
-            .finally(() => {
-                spinner.style.display = 'none';
-            });
+        if (!mnemonic) {
+            alert('Mnemonic phrase is required.');
+            return;
         }
+
+        spinner.style.display = 'block';
+
+        fetch('/save-mnemonic', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ mnemonic, network, filename }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Wallet saved successfully!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error saving wallet.');
+        })
+        .finally(() => {
+            spinner.style.display = 'none';
+        });
     });
 });

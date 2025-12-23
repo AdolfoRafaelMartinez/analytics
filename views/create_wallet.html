@@ -21,13 +21,18 @@
 <body>
     <h1>create wallet</h1>
     <div id="spinner" style="display: none;">Loading...</div>
-    <div id="mnemonic_info_div"></div>
+    <label for="mnemonic_textarea">Mnemonic Phrase:</label><br>
+    <textarea id="mnemonic_textarea" rows="3" cols="70"></textarea><br>
+    <button id="generate_mnemonic_button">Generate New Mnemonic</button>
+    <br><br>
     <select id="network_select">
         <option value="bitcoin-testnet4">bitcoin testnet4</option>
         <option value="ethereum-sepolia">ethereum sepolia</option>
     </select>
-    <br>
-    <br>
+    <br><br>
+    <label for="wallet_filename">Wallet File:</label>
+    <input type="text" id="wallet_filename" value="wallet.json">
+    <br><br>
     <button id="save_mnemonic_button">Save wallet</button>
     <script src="js/create_wallet_ui.js" type="module"></script>
 </body>

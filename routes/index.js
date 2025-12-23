@@ -64,9 +64,9 @@ router.post('/get_btc_balance', async (req, res) => {
 });
 
 router.post('/save-mnemonic', (req, res) => {
-    const { mnemonic, network } = req.body;
+    const { mnemonic, network, filename } = req.body;
     const data = { mnemonic, network };
-    fs.writeFile('wallet.json', JSON.stringify(data, null, 2), (err) => {
+    fs.writeFile(filename, JSON.stringify(data, null, 2), (err) => {
         if (err) {
             console.error('Error saving wallet:', err);
             return res.status(500).json({ message: 'Error saving wallet' });
@@ -105,7 +105,8 @@ router.get('/get-transaction-receipt/:txHash', async (req, res) => {
 });
 
 router.get('/load_wallet_data', (req, res) => {
-    fs.readFile('wallet.json', 'utf8', (err, data) => {
+    const { filename } = req.query;
+    fs.readFile(filename, 'utf8', (err, data) => {
         if (err) {
             if (err.code === 'ENOENT') {
                 return res.json({ mnemonic: '' });
