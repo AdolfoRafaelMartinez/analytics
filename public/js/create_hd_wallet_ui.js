@@ -91,19 +91,6 @@ createWalletBtn.addEventListener('click', () => {
         } else {
             alert("oh oh!");
         }
-
-        // Save the entire wallet object
-        fetch('/save-mnemonic', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(wallet),
-        })
-        .then(response => response.json())
-        .then(data => console.log(data.message))
-        .catch(error => console.error('Error saving wallet:', error));
-
         walletInfoDiv.innerHTML = walletInfoHtml;
     } catch (error) {
         console.error('Error creating wallet:', error);
