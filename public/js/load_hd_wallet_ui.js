@@ -15,7 +15,7 @@ function createWallet() {
         let wallet;
         let walletInfoHtml = '';
 
-        if (network === 'bitcoin_testnet') {
+        if (network === 'bitcoin-testnet4') {
             wallet = create_hd_wallet_bitcoin(mnemonic);
             let childKeysHtml = '';
             wallet.childKeys.forEach(key => {

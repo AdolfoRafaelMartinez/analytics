@@ -17,8 +17,8 @@ router.get('/create_mnemonic', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'create_mnemonic.html'));
 });
 
-router.get('/create_hd_wallet', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'create_hd_wallet.html'));
+router.get('/load_hd_wallet', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'load_hd_wallet.html'));
 });
 
 router.get('/hd_derivations', (req, res) => {
