@@ -69,7 +69,7 @@ function createWallet() {
                 childKeysHtml += `
                     <div>
                         <p>Path:<strong> ${key.path}</strong></p>
-                        <p>Address: ${key.address}</p>
+                        <p>Address: <a href="https://sepolia.etherscan.io/address/${key.address}" target="_blank" rel="noopener noreferrer">${key.address}</a></p>
                         <p>Private Key: ${key.privateKey}</p>
                         <p>Public Key: ${key.publicKey}</p>
                     </div>
@@ -81,7 +81,8 @@ function createWallet() {
                 <br>
                 <h3>parent:</h3>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
-                <p>address: ${wallet.root.address}</p>
+                <p>: </p>
+                <p>address: <a href="https://sepolia.etherscan.io/address/${wallet.root.address}" target="_blank" rel="noopener noreferrer">${wallet.root.address}</a></p>
                 <p>privateKey: ${wallet.root.privateKey}</p>
                 <p>publicKey: ${wallet.root.publicKey}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
