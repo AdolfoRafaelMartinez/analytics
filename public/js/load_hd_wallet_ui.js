@@ -64,11 +64,12 @@ async function createWallet() {
             `;
         } else if (network === 'ethereum-sepolia') {
             wallet = create_hd_wallet_ethereum(mnemonic);
-            let childKeysHtml = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode bal</th><th>ankr bal</th></tr>';
+            let childKeysHtml = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode bal</th><th>ankr bal</th><th>error</th></tr>';
             const provider = new ethers.JsonRpcProvider("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/");
             const provider2 = new ethers.JsonRpcProvider("https://rpc.ankr.com/eth_sepolia/13c41833c6f210b90724b4042a730bed83958ca5d5966952fba35b42ef3e8e31");
             let totalBalance = 0;
             let totalBalance2 = 0;
+            let totalError = 0;
 
             for (const key of wallet.childKeys) {
                 const balanceInWei = await provider.getBalance(key.address);
@@ -77,6 +78,9 @@ async function createWallet() {
                 const balanceInWei2 = await provider2.getBalance(key.address);
                 const balanceInEther2 = ethers.formatEther(balanceInWei2);
                 totalBalance2 += parseFloat(balanceInEther2);
+                const error = Math.abs(parseFloat(balanceInEther) - parseFloat(balanceInEther2));
+                totalError += error;
+
                 childKeysHtml += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
@@ -85,14 +89,16 @@ async function createWallet() {
                         <td>${key.publicKey}</td>
                         <td>${balanceInEther} ETH</td>
                         <td>${balanceInEther2} ETH</td>
+                        <td>${error.toFixed(18)} ETH</td>
                     </tr>
                 `;
             }
             childKeysHtml += `
                 <tr>
-                    <td colspan="4" style="text-align: right;"><strong>Total Balance:</strong></td>
+                    <td colspan="4" style="text-align: right;"><strong>Totals:</strong></td>
                     <td>${totalBalance.toFixed(4)} ETH</td>
                     <td>${totalBalance2.toFixed(4)} ETH</td>
+                    <td>${totalError.toFixed(4)} ETH</td>
                 </tr>
             `;
             childKeysHtml += '</table>';
