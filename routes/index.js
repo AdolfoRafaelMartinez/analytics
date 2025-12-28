@@ -130,12 +130,11 @@ router.get('/get_eth_transactions', (req, res) => {
 
 router.post('/get_eth_transactions', async (req, res) => {
     const { address } = req.body;
-    // You can get a free API key from https://etherscan.io/
-    const apiKey = '';
+    const API_KEY = process.env.API_KEY;
 
     try {
         const response = await axios.get(
-            `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${apiKey}`
+            `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${API_KEY}`
         );
 
         res.json(response.data);
