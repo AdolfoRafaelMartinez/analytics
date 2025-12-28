@@ -1,41 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('ethTransactionsForm');
-    const output = document.getElementById('output');
+import { ethers } from '/node_modules/ethers/dist/ethers.js';
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        output.textContent = ''; // Clear previous output
+const getTransactions = async (event) => {
+    event.preventDefault();
+    const address = document.getElementById('address').value;
+    const outputDiv = document.getElementById('output');
+    
+    outputDiv.innerHTML = "Fetching transactions...";
 
-        const address = document.getElementById('address').value;
-
-        try {
-            const response = await fetch('/get_eth_transactions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ address })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            
-            if (data.result && data.result.transactions.length > 0) {
-                output.textContent = JSON.stringify(data.result.transactions, null, 2);
-            } else {
-                output.textContent = 'No transactions found for this address.';
-            }
-
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
-            output.textContent = `An error occurred: ${error.message}`;
+    try {
+        const provider = new ethers.JsonRpcProvider("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/");
+        const history = await provider.getHistory(address);
+        if (history.length === 0) {
+            outputDiv.innerHTML = "No transactions found for this address.";
+            return;
         }
-    });
-});
+        outputDiv.innerHTML = JSON.stringify(history, null, 2);
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+        outputDiv.innerHTML = "Error fetching transactions. Please check the address and try again.";
+    }
+};
+
+document.getElementById('ethTransactionsForm').addEventListener('submit', getTransactions);
