@@ -130,23 +130,12 @@ router.get('/get_eth_transactions', (req, res) => {
 
 router.post('/get_eth_transactions', async (req, res) => {
     const { address } = req.body;
+    // You can get a free API key from https://etherscan.io/
+    const apiKey = '';
 
     try {
-        const response = await axios.post(
-            "https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/",
-            {
-                method: 'qn_getTransactionsByAddress',
-                params: [{
-                    address: address,
-                    page: 1,
-                    perPage: 10
-                }]
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
+        const response = await axios.get(
+            `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${apiKey}`
         );
 
         res.json(response.data);
