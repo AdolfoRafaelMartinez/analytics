@@ -1,3 +1,4 @@
+.env
 *.swp
 wallet_*.json
 .DS_Store
