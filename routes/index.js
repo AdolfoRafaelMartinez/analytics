@@ -8,6 +8,7 @@ import axios from 'axios';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
+const QUICKNODE_URL = 'https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/';
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
@@ -79,7 +80,7 @@ router.post('/transfer-eth', async (req, res) => {
     const { senderPrivateKey, recipientAddress, amount } = req.body;
 
     try {
-        const provider = new ethers.JsonRpcProvider("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/");
+        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
         const wallet = new ethers.Wallet(senderPrivateKey, provider);
         const tx = await wallet.sendTransaction({
             to: recipientAddress,
@@ -95,7 +96,7 @@ router.post('/transfer-eth', async (req, res) => {
 router.get('/get-transaction-receipt/:txHash', async (req, res) => {
     const { txHash } = req.params;
     try {
-        const provider = new ethers.JsonRpcProvider("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/");
+        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
         const receipt = await provider.getTransactionReceipt(txHash);
         res.json({ receipt });
     } catch (error) {
@@ -142,6 +143,22 @@ router.post('/get_eth_transactions', async (req, res) => {
         console.error('Error fetching ETH transactions:', error);
         res.status(500).json({ error: 'Error fetching ETH transactions' });
     }
+});
+
+router.get('/get_transaction_by_hash', async (req, res) => {
+    const { hash } = req.query;
+    try {
+        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const tx = await provider.getTransaction(hash);
+        res.json(tx);
+    } catch (error) {
+        console.error('Error fetching transaction:', error);
+        res.status(500).json({ error: 'Error fetching transaction' });
+    }
+});
+
+router.get('/get_transaction_by_hash_page', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_transaction_by_hash.html'));
 });
 
 export default router;
