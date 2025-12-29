@@ -24,12 +24,14 @@
     <h1>Load Wallet</h1>
     <label for="walletFile">Load from file:</label><br>
     <input type="file" id="walletFile" accept=".json"><br><br>
-    <label for="mnemonicInput">Mnemonic Phrase:</label><br>
-    <p id="mnemonicInput"></p>
-    <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">+</div>
-    <label for="networkSelector">Blockchain:</label><br>
-    <p id="networkSelector"></p>
-    <div style="text-align: left; font-size: 2em; margin: 0.5em 0 0;">=</div>
+    <div id="walletDetails" style="display: none;">
+        <label for="mnemonicInput">Mnemonic Phrase:</label><br>
+        <p id="mnemonicInput"></p>
+        <div style="text-align: left; font-size: 2em; margin: 0.5em 0;">+</div>
+        <label for="networkSelector">Blockchain:</label><br>
+        <p id="networkSelector"></p>
+        <div style="text-align: left; font-size: 2em; margin: 0.5em 0 0;">=</div>
+    </div>
     <div id="spinner" style="display: none;"><div class="spinner"></div></div>
     <div id="walletInfo"></div>
     <script src="js/load_hd_wallet_ui.js" type="module"></script>

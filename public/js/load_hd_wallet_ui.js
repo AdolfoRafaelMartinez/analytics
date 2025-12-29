@@ -5,6 +5,15 @@ const spinner = document.getElementById('spinner');
 const mnemonicInput = document.getElementById('mnemonicInput');
 const networkSelector = document.getElementById('networkSelector');
 const walletFile = document.getElementById('walletFile');
+const walletDetails = document.getElementById('walletDetails');
+
+function truncate(str, n = 3) {
+    if (!str) return '';
+    if (str.length > n * 2) {
+        return str.slice(0, n) + '...' + str.slice(str.length - n);
+    }
+    return str;
+}
 
 walletFile.addEventListener('change', (event) => {
     const file = event.target.files[0];
@@ -15,6 +24,7 @@ walletFile.addEventListener('change', (event) => {
                 const walletData = JSON.parse(e.target.result);
                 mnemonicInput.textContent = walletData.mnemonic;
                 networkSelector.innerHTML = walletData.network;
+                walletDetails.style.display = 'block';
                 await createWallet();
             } catch (error) {
                 console.error('Error parsing wallet file:', error);
@@ -39,12 +49,14 @@ async function createWallet() {
             wallet = create_hd_wallet_bitcoin(mnemonic);
             let childKeysHtml = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th></tr>';
             wallet.childKeys.forEach(key => {
+                const privateKey = btoa(key.privateKey);
+                const publicKey = btoa(key.publicKey);
                 childKeysHtml += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
-                        <td>${key.address}</td>
-                        <td>${btoa(key.privateKey)}</td>
-                        <td>${btoa(key.publicKey)}</td>
+                        <td>${truncate(key.address)}</td>
+                        <td>${truncate(privateKey)}</td>
+                        <td>${truncate(publicKey)}</td>
                     </tr>
                 `;
             });
@@ -84,21 +96,21 @@ async function createWallet() {
                 childKeysHtml += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
-                        <td><a href=\"https://sepolia.etherscan.io/address/${key.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${key.address}</a></td>
-                        <td>${key.privateKey}</td>
-                        <td>${key.publicKey}</td>
-                        <td style="text-align: right;">${balanceInEther} ETH</td>
-                        <td style="text-align: right;">${balanceInEther2} ETH</td>
-                        <td style="text-align: right;">${error.toFixed(18)} ETH</td>
+                        <td><a href=\"https://sepolia.etherscan.io/address/${key.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${truncate(key.address)}</a></td>
+                        <td>${truncate(key.privateKey)}</td>
+                        <td>${truncate(key.publicKey)}</td>
+                        <td style=\"text-align: right;\">${balanceInEther} ETH</td>
+                        <td style=\"text-align: right;\">${balanceInEther2} ETH</td>
+                        <td style=\"text-align: right;\">${error.toFixed(18)} ETH</td>
                     </tr>
                 `;
             }
             childKeysHtml += `
                 <tr>
-                    <td colspan="4" style="text-align: right;"><strong>Totals:</strong></td>
-                    <td style="text-align: right;"><strong>${totalBalance.toFixed(4)} ETH</strong></td>
-                    <td style="text-align: right;"><strong>${totalBalance2.toFixed(4)} ETH</strong></td>
-                    <td style="text-align: right;"><strong>${totalError.toFixed(4)} ETH</strong></td>
+                    <td colspan=\"4\" style=\"text-align: right;\"><strong>Totals:</strong></td>
+                    <td style=\"text-align: right;\"><strong>${totalBalance.toFixed(4)} ETH</strong></td>
+                    <td style=\"text-align: right;\"><strong>${totalBalance2.toFixed(4)} ETH</strong></td>
+                    <td style=\"text-align: right;\"><strong>${totalError.toFixed(4)} ETH</strong></td>
                 </tr>
             `;
             childKeysHtml += '</table>';
@@ -107,9 +119,9 @@ async function createWallet() {
                 <br>
                 <h3>parent:</h3>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
-                <p>address: <a href=\"https://sepolia.etherscan.io/address/${wallet.root.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${wallet.root.address}</a></p>
-                <p>privateKey: ${wallet.root.privateKey}</p>
-                <p>publicKey: ${wallet.root.publicKey}</p>
+                <p>address: <a href=\"https://sepolia.etherscan.io/address/${wallet.root.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${truncate(wallet.root.address)}</a></p>
+                <p>privateKey: ${truncate(wallet.root.privateKey)}</p>
+                <p>publicKey: ${truncate(wallet.root.publicKey)}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
                 <h3>children:</h3>
                 ${childKeysHtml}
