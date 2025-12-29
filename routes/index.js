@@ -8,7 +8,7 @@ import axios from 'axios';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
-const QUICKNODE_URL = 'https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/';
+const QN_ETH_URL = 'https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/';
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
@@ -80,7 +80,7 @@ router.post('/transfer-eth', async (req, res) => {
     const { senderPrivateKey, recipientAddress, amount } = req.body;
 
     try {
-        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
         const wallet = new ethers.Wallet(senderPrivateKey, provider);
         const tx = await wallet.sendTransaction({
             to: recipientAddress,
@@ -96,7 +96,7 @@ router.post('/transfer-eth', async (req, res) => {
 router.get('/get-transaction-receipt/:txHash', async (req, res) => {
     const { txHash } = req.params;
     try {
-        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
         const receipt = await provider.getTransactionReceipt(txHash);
         res.json({ receipt });
     } catch (error) {
@@ -148,7 +148,7 @@ router.post('/get_eth_transactions', async (req, res) => {
 router.get('/get_transaction_by_hash', async (req, res) => {
     const { hash } = req.query;
     try {
-        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
         const tx = await provider.getTransaction(hash);
         res.json(tx);
     } catch (error) {
@@ -164,7 +164,7 @@ router.get('/get_transaction_by_hash_page', (req, res) => {
 router.get('/get_block_transactions', async (req, res) => {
     const { blockNumber } = req.query;
     try {
-        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
         const block = await provider.getBlock(parseInt(blockNumber));
         res.json(block);
     } catch (error) {
