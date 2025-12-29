@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transfer ETH</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Transfer ETH</h1>
-    <input type="text" id="senderPrivateKey" placeholder="Sender's Private Key" style="width: 400px;"><br><br>
-    <input type="text" id="recipientAddress" placeholder="Recipient's Address" style="width: 400px;"><br><br>
-    <input type="text" id="amount" placeholder="Amount in ETH"><br><br>
-    <button id="transferButton">Transfer</button>
-    <div id="spinner" style="display: none;">Loading...</div>
-    <div id="result"></div>
+    <div class="schwab-container">
+        <h1>Transfer ETH</h1>
+        <div class="form-group">
+            <label for="senderPrivateKey">Sender's Private Key</label>
+            <input type="text" id="senderPrivateKey" placeholder="Sender's Private Key">
+        </div>
+        <div class="form-group">
+            <label for="recipientAddress">Recipient's Address</label>
+            <input type="text" id="recipientAddress" placeholder="Recipient's Address">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount in ETH</label>
+            <input type="text" id="amount" placeholder="Amount in ETH">
+        </div>
+        <button id="transferButton">Transfer</button>
+        <div id="spinner" style="display: none;">Loading...</div>
+        <div id="result"></div>
+    </div>
     <script src="js/transfer_eth_ui.js" type="module"></script>
 </body>
 </html>
