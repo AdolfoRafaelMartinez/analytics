@@ -7,6 +7,7 @@ document.getElementById('transferButton').addEventListener('click', async () => 
 
     spinner.style.display = 'block';
     resultDiv.innerHTML = '';
+    resultDiv.className = '';
 
     try {
         const response = await fetch('/transfer-eth', {
@@ -20,9 +21,9 @@ document.getElementById('transferButton').addEventListener('click', async () => 
         const result = await response.json();
 
         if (response.ok) {
+            resultDiv.className = 'result-message';
             resultDiv.innerHTML = `Transaction sent! Transaction Hash: ${result.txHash}. Waiting for confirmation...`;
 
-            // Start polling for transaction receipt
             const interval = setInterval(async () => {
                 try {
                     const receiptResponse = await fetch(`/get-transaction-receipt/${result.txHash}`);
@@ -37,22 +38,20 @@ document.getElementById('transferButton').addEventListener('click', async () => 
                             resultDiv.innerHTML = `Transaction in mempool. Waiting for confirmation...<br>Transaction Hash: ${result.txHash}`;
                         }
                     } else if (!receiptResponse.ok) {
-                        // Stop polling on error, but keep the initial message
                         clearInterval(interval);
-                        // The server might be temporarily unavailable, or the transaction might have been dropped.
-                        // We leave the user with the transaction hash to check manually.
                     }
                 } catch (error) {
-                    // Stop polling on error
                     clearInterval(interval);
                 }
-            }, 5000); // Poll every 5 seconds
+            }, 5000);
 
         } else {
+            resultDiv.className = 'result-message error';
             resultDiv.innerHTML = `Error: ${result.error}`;
             spinner.style.display = 'none';
         }
     } catch (error) {
+        resultDiv.className = 'result-message error';
         resultDiv.innerHTML = `Error: ${error.message}`;
         spinner.style.display = 'none';
     }

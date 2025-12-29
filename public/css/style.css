@@ -89,3 +89,19 @@ pre {
     margin-bottom: 5px;
     font-weight: bold;
 }
+
+.result-message {
+    background-color: #f0f8ff;
+    border: 1px solid #add8e6;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.result-message.error {
+    background-color: #fff0f0;
+    border: 1px solid #ffdddd;
+    color: #a94442;
+}
