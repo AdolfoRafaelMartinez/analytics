@@ -21,7 +21,7 @@ document.getElementById('transferButton').addEventListener('click', async () => 
         const result = await response.json();
 
         if (response.ok) {
-            resultDiv.className = 'result-message';
+            resultDiv.className = 'result-message sent';
             resultDiv.innerHTML = `Transaction sent! Transaction Hash: ${result.txHash}. Waiting for confirmation...`;
 
             const interval = setInterval(async () => {
@@ -32,6 +32,7 @@ document.getElementById('transferButton').addEventListener('click', async () => 
                     if (receiptResponse.ok && receiptResult.receipt) {
                         if (receiptResult.receipt.blockNumber) {
                             clearInterval(interval);
+                            resultDiv.className = 'result-message confirmed';
                             resultDiv.innerHTML = `Transaction confirmed in block: ${receiptResult.receipt.blockNumber}.<br>Transaction Hash: ${result.txHash}`;
                             spinner.style.display = 'none';
                         } else {
