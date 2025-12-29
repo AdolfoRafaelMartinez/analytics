@@ -60,7 +60,7 @@ router.get('/transfer_eth', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
 
-router.get('/latest_btc_block', (req, res) => {
+router.get('/get_latest_btc_block', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'latest_btc_block.html'));
 });
 
@@ -203,7 +203,7 @@ router.get('/get_transaction_by_hash_page', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_transaction_by_hash.html'));
 });
 
-router.get('/get_block_transactions', async (req, res) => {
+router.get('/get_transactions_by_block', async (req, res) => {
     const { blockNumber } = req.query;
     try {
         const provider = new ethers.JsonRpcProvider(QN_ETH_URL);

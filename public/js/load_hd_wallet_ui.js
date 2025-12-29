@@ -11,7 +11,7 @@ const network_selector = document.getElementById('networkSelector');
 const wallet_file = document.getElementById('walletFile');
 const wallet_details = document.getElementById('walletDetails');
 
-function truncate(str, n = 3) {
+function truncate(str, n = 4) {
     if (!str) return '';
     if (str.length > n * 2) {
         return str.slice(0, n) + '...' + str.slice(str.length - n);
