@@ -161,4 +161,20 @@ router.get('/get_transaction_by_hash_page', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_transaction_by_hash.html'));
 });
 
+router.get('/get_block_transactions', async (req, res) => {
+    const { blockNumber } = req.query;
+    try {
+        const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);
+        const block = await provider.getBlock(parseInt(blockNumber));
+        res.json(block);
+    } catch (error) {
+        console.error('Error fetching block transactions:', error);
+        res.status(500).json({ error: 'Error fetching block transactions' });
+    }
+});
+
+router.get('/get_block_transactions_page', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_block_transactions.html'));
+});
+
 export default router;
