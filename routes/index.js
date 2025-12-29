@@ -167,6 +167,26 @@ router.post('/get_eth_transactions', async (req, res) => {
     }
 });
 
+router.post('/get_eth_transactions_by_address', async (req, res) => {
+    const { address } = req.body;
+    try {
+        const response = await axios.post(QN_ETH_URL, {
+            method: 'qn_getTransactionsByAddress',
+            params: [{
+                address: address,
+                page: 1,
+                perPage: 10
+            }],
+            id: 1,
+            jsonrpc: "2.0"
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching ETH transactions by address:', error);
+        res.status(500).json({ error: 'Error fetching ETH transactions by address' });
+    }
+});
+
 router.get('/get_transaction_by_hash', async (req, res) => {
     const { hash } = req.query;
     try {
