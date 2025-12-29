@@ -14,6 +14,7 @@ const router = express.Router();
 const ETH_API_KEY = process.env.ETH_API_KEY;
 const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`;
 const ANKR_URL = `https://rpc.ankr.com/eth_sepolia`;
+const QN_BTC_URL = process.env.QN_BTC_URL;
 
 router.get('/api/key', (req, res) => {
     res.json({ apiKey: ETH_API_KEY });
@@ -89,6 +90,33 @@ router.get('/transfer_eth', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
 
+router.get('/latest_btc_block', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'latest_btc_block.html'));
+});
+
+router.get('/api/latest_btc_block', async (req, res) => {
+    try {
+        const response = await axios.post(QN_BTC_URL, {
+            method: 'getbestblockhash',
+            params: [],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+        const hash = response.data.result;
+        const blockResponse = await axios.post(QN_BTC_URL, {
+            method: 'getblock',
+            params: [hash],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        res.json(blockResponse.data.result);
+    } catch (error) {
+        console.error('Error fetching latest BTC block:', error);
+        res.status(500).json({ error: 'Error fetching latest BTC block' });
+    }
+});
+
 router.get('/load_wallet_view', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'load_wallet_view.html'));
 });
@@ -101,10 +129,13 @@ router.post('/get_btc_balance', async (req, res) => {
     const { address } = req.body;
 
     try {
-        const response = await axios.get(`https://blockstream.info/testnet4/api/address/${address}/utxo`);
-        const utxos = response.data;
-        const balance = utxos.reduce((acc, utxo) => acc + utxo.value, 0) / 100000000;
-        res.json({ balance });
+        const response = await axios.post(QN_BTC_URL, {
+            method: 'getreceivedbyaddress',
+            params: [address, 0],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+        res.json({ balance: response.data.result });
     } catch (error) {
         console.error('Error fetching BTC balance:', error);
         res.status(500).json({ error: 'Error fetching BTC balance' });
