@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+const ETH_API_KEY = process.env.ETH_API_KEY;
+
 import { ethers } from 'ethers';
 
-const QUICKNODE_URL = 'https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/';
+const QUICKNODE_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`;
 const TX_HASH = '0x8ca3a7231664207a098db614e8c0c07a8573d004813b61c817c8b91d07d7cd67';
 
 const provider = new ethers.JsonRpcProvider(QUICKNODE_URL);

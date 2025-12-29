@@ -1,11 +1,15 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+const ETH_API_KEY = process.env.ETH_API_KEY;
 import { ethers } from "ethers";
 import { create_hd_wallet_bitcoin, create_hd_wallet_ethereum } from './createHDWalletM49.js';
-const walletInfoDiv = document.getElementById('walletInfo');
+const wallet_info_div = document.getElementById('walletInfo');
 const spinner = document.getElementById('spinner');
-const mnemonicInput = document.getElementById('mnemonicInput');
-const networkSelector = document.getElementById('networkSelector');
-const walletFile = document.getElementById('walletFile');
-const walletDetails = document.getElementById('walletDetails');
+const mnemonic_input = document.getElementById('mnemonicInput');
+const network_selector = document.getElementById('networkSelector');
+const wallet_file = document.getElementById('walletFile');
+const wallet_details = document.getElementById('walletDetails');
 
 function truncate(str, n = 3) {
     if (!str) return '';
@@ -15,17 +19,17 @@ function truncate(str, n = 3) {
     return str;
 }
 
-walletFile.addEventListener('change', (event) => {
+wallet_file.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = async (e) => {
             try {
-                const walletData = JSON.parse(e.target.result);
-                mnemonicInput.textContent = walletData.mnemonic;
-                networkSelector.innerHTML = walletData.network;
-                walletDetails.style.display = 'block';
-                await createWallet();
+                const wallet_data = JSON.parse(e.target.result);
+                mnemonic_input.textContent = wallet_data.mnemonic;
+                network_selector.innerHTML = wallet_data.network;
+                wallet_details.style.display = 'block';
+                await create_wallet();
             } catch (error) {
                 console.error('Error parsing wallet file:', error);
                 alert('Error parsing wallet file. Please make sure it is a valid JSON file.');
@@ -35,34 +39,34 @@ walletFile.addEventListener('change', (event) => {
     }
 });
 
-async function createWallet() {
-    walletInfoDiv.innerHTML = '';
+async function create_wallet() {
+    wallet_info_div.innerHTML = '';
     spinner.style.display = 'block';
 
     try {
-        const mnemonic = mnemonicInput.textContent;
-        const network = networkSelector.innerHTML;
+        const mnemonic = mnemonic_input.textContent;
+        const network = network_selector.innerHTML;
         let wallet;
-        let walletInfoHtml = '';
+        let wallet_info_html = '';
 
         if (network === 'bitcoin-testnet4') {
             wallet = create_hd_wallet_bitcoin(mnemonic);
-            let childKeysHtml = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th></tr>';
+            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th></tr>';
             wallet.childKeys.forEach(key => {
-                const privateKey = btoa(key.privateKey);
-                const publicKey = btoa(key.publicKey);
-                childKeysHtml += `
+                const private_key = btoa(key.privateKey);
+                const public_key = btoa(key.publicKey);
+                child_keys_html += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
                         <td>${truncate(key.address)}</td>
-                        <td>${truncate(privateKey)}</td>
-                        <td>${truncate(publicKey)}</td>
+                        <td>${truncate(private_key)}</td>
+                        <td>${truncate(public_key)}</td>
                     </tr>
                 `;
             });
-            childKeysHtml += '</table>';
+            child_keys_html += '</table>';
 
-            walletInfoHtml = `
+            wallet_info_html = `
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
                 <p><strong>seed:</strong> ${wallet.seed.toString('base64')}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">+</div>
@@ -71,51 +75,51 @@ async function createWallet() {
                 <p><strong>root:</strong> ${wallet.root.chainCode.toString('base64')}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
                 <h3>children:</h3>
-                ${childKeysHtml}
+                ${child_keys_html}
                 <hr>
             `;
         } else if (network === 'ethereum-sepolia') {
             wallet = create_hd_wallet_ethereum(mnemonic);
-            let childKeysHtml = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style="font-weight:normal">(bal)</span></th><th>ankr <span style="font-weight:normal">(bal)</span></th><th>| error |</th></tr>';
-            const provider = new ethers.JsonRpcProvider("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/");
-            const provider2 = new ethers.JsonRpcProvider("https://rpc.ankr.com/eth_sepolia/13c41833c6f210b90724b4042a730bed83958ca5d5966952fba35b42ef3e8e31");
-            let totalBalance = 0;
-            let totalBalance2 = 0;
-            let totalError = 0;
+            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style=\"font-weight:normal\">(bal)</span></th><th>ankr <span style=\"font-weight:normal\">(bal)</span></th><th>| error |</th></tr>';
+            const provider = new ethers.JsonRpcProvider(`https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`);
+            const provider2 = new ethers.JsonRpcProvider(`https://rpc.ankr.com/eth_sepolia/${ETH_API_KEY}`);
+            let total_balance = 0;
+            let total_balance2 = 0;
+            let total_error = 0;
 
             for (const key of wallet.childKeys) {
-                const balanceInWei = await provider.getBalance(key.address);
-                const balanceInEther = ethers.formatEther(balanceInWei);
-                totalBalance += parseFloat(balanceInEther);
-                const balanceInWei2 = await provider2.getBalance(key.address);
-                const balanceInEther2 = ethers.formatEther(balanceInWei2);
-                totalBalance2 += parseFloat(balanceInEther2);
-                const error = Math.abs(parseFloat(balanceInEther) - parseFloat(balanceInEther2));
-                totalError += error;
+                const balance_in_wei = await provider.getBalance(key.address);
+                const balance_in_ether = ethers.formatEther(balance_in_wei);
+                total_balance += parseFloat(balance_in_ether);
+                const balance_in_wei2 = await provider2.getBalance(key.address);
+                const balance_in_ether2 = ethers.formatEther(balance_in_wei2);
+                total_balance2 += parseFloat(balance_in_ether2);
+                const error = Math.abs(parseFloat(balance_in_ether) - parseFloat(balance_in_ether2));
+                total_error += error;
 
-                childKeysHtml += `
+                child_keys_html += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
                         <td><a href=\"https://sepolia.etherscan.io/address/${key.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${truncate(key.address)}</a></td>
                         <td>${truncate(key.privateKey)}</td>
                         <td>${truncate(key.publicKey)}</td>
-                        <td style=\"text-align: right;\">${balanceInEther} ETH</td>
-                        <td style=\"text-align: right;\">${balanceInEther2} ETH</td>
+                        <td style=\"text-align: right;\">${balance_in_ether} ETH</td>
+                        <td style=\"text-align: right;\">${balance_in_ether2} ETH</td>
                         <td style=\"text-align: right;\">${error.toFixed(18)} ETH</td>
                     </tr>
                 `;
             }
-            childKeysHtml += `
+            child_keys_html += `
                 <tr>
                     <td colspan=\"4\" style=\"text-align: right;\"><strong>Totals:</strong></td>
-                    <td style=\"text-align: right;\"><strong>${totalBalance.toFixed(4)} ETH</strong></td>
-                    <td style=\"text-align: right;\"><strong>${totalBalance2.toFixed(4)} ETH</strong></td>
-                    <td style=\"text-align: right;\"><strong>${totalError.toFixed(4)} ETH</strong></td>
+                    <td style=\"text-align: right;\"><strong>${total_balance.toFixed(4)} ETH</strong></td>
+                    <td style=\"text-align: right;\"><strong>${total_balance2.toFixed(4)} ETH</strong></td>
+                    <td style=\"text-align: right;\"><strong>${total_error.toFixed(4)} ETH</strong></td>
                 </tr>
             `;
-            childKeysHtml += '</table>';
+            child_keys_html += '</table>';
 
-            walletInfoHtml = `
+            wallet_info_html = `
                 <br>
                 <h3>parent:</h3>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
@@ -124,16 +128,16 @@ async function createWallet() {
                 <p>publicKey: ${truncate(wallet.root.publicKey)}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
                 <h3>children:</h3>
-                ${childKeysHtml}
+                ${child_keys_html}
                 <hr>
             `;
         } else {
             alert("oh oh!");
         }
-        walletInfoDiv.innerHTML = walletInfoHtml;
+        wallet_info_div.innerHTML = wallet_info_html;
     } catch (error) {
         console.error('Error creating wallet:', error);
-        walletInfoDiv.innerHTML = `Error creating wallet: ${error.message}`;
+        wallet_info_div.innerHTML = `Error creating wallet: ${error.message}`;
     } finally {
         spinner.style.display = 'none';
     }

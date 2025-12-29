@@ -1,13 +1,17 @@
+import dotenv from 'dotenv';
+dotenv.config();
 
-const getTransactions = async (event) => {
+const ETH_API_KEY = process.env.ETH_API_KEY;
+
+const get_transactions = async (event) => {
     event.preventDefault();
     const address = document.getElementById('address').value;
-    const outputDiv = document.getElementById('output');
+    const output_div = document.getElementById('output');
 
-    outputDiv.innerHTML = "Fetching transactions...";
+    output_div.innerHTML = "Fetching transactions...";
 
     try {
-        const response = await fetch("https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/", {
+        const response = await fetch(`https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,14 +29,14 @@ const getTransactions = async (event) => {
         });
         const data = await response.json();
         if (data.result && data.result.paginatedItems && data.result.paginatedItems.length > 0) {
-            outputDiv.innerHTML = JSON.stringify(data.result.paginatedItems, null, 2);
+            output_div.innerHTML = JSON.stringify(data.result.paginatedItems, null, 2);
         } else {
-            outputDiv.innerHTML = "No transactions found for this address.";
+            output_div.innerHTML = "No transactions found for this address.";
         }
     } catch (error) {
         console.error('Error fetching transactions:', error);
-        outputDiv.innerHTML = "Error fetching transactions. Please check the address and try again.";
+        output_div.innerHTML = "Error fetching transactions. Please check the address and try again.";
     }
 };
 
-document.getElementById('ethTransactionsForm').addEventListener('submit', getTransactions);
+document.getElementById('ethTransactionsForm').addEventListener('submit', get_transactions);

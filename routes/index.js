@@ -14,6 +14,10 @@ const router = express.Router();
 const ETH_API_KEY = process.env.ETH_API_KEY;
 const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`;
 
+router.get('/api/key', (req, res) => {
+    res.json({ apiKey: ETH_API_KEY });
+});
+
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
