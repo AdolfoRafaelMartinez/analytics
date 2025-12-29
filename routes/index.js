@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
 const router = express.Router();
 const ETH_API_KEY = process.env.ETH_API_KEY;
 const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`;
+const ANKR_URL = `https://rpc.ankr.com/eth_sepolia`;
 
 router.get('/api/key', (req, res) => {
     res.json({ apiKey: ETH_API_KEY });
@@ -56,12 +57,36 @@ router.post('/get_eth_balance', async (req, res) => {
     }
 });
 
-router.get('/transfer_eth', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
+router.post('/get_eth_balances', async (req, res) => {
+    const { addresses } = req.body;
+
+    try {
+        const provider_qn = new ethers.JsonRpcProvider(QN_ETH_URL);
+        const provider_ankr = new ethers.JsonRpcProvider(ANKR_URL);
+
+        const balances = await Promise.all(addresses.map(async (address) => {
+            const balance_qn_wei = await provider_qn.getBalance(address);
+            const balance_qn_ether = ethers.formatEther(balance_qn_wei);
+
+            const balance_ankr_wei = await provider_ankr.getBalance(address);
+            const balance_ankr_ether = ethers.formatEther(balance_ankr_wei);
+
+            return {
+                address,
+                balance_qn: balance_qn_ether,
+                balance_ankr: balance_ankr_ether,
+            };
+        }));
+
+        res.json(balances);
+    } catch (error) {
+        console.error('Error fetching ETH balances:', error);
+        res.status(500).json({ error: 'Error fetching ETH balances' });
+    }
 });
 
-router.get('/get_latest_btc_block', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'latest_btc_block.html'));
+router.get('/transfer_eth', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
 
 router.get('/load_wallet_view', (req, res) => {
@@ -203,7 +228,7 @@ router.get('/get_transaction_by_hash_page', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_transaction_by_hash.html'));
 });
 
-router.get('/get_transactions_by_block', async (req, res) => {
+router.get('/get_block_transactions', async (req, res) => {
     const { blockNumber } = req.query;
     try {
         const provider = new ethers.JsonRpcProvider(QN_ETH_URL);

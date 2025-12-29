@@ -1,8 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-const ETH_API_KEY = process.env.ETH_API_KEY;
-import { ethers } from "ethers";
 import { create_hd_wallet_bitcoin, create_hd_wallet_ethereum } from './createHDWalletM49.js';
 const wallet_info_div = document.getElementById('walletInfo');
 const spinner = document.getElementById('spinner');
@@ -80,21 +75,32 @@ async function create_wallet() {
             `;
         } else if (network === 'ethereum-sepolia') {
             wallet = create_hd_wallet_ethereum(mnemonic);
+            const addresses = wallet.childKeys.map(key => key.address);
+
+            const response = await fetch('/get_eth_balances', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ addresses })
+            });
+            const balances = await response.json();
+
             let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style=\"font-weight:normal\">(bal)</span></th><th>ankr <span style=\"font-weight:normal\">(bal)</span></th><th>| error |</th></tr>';
-            const provider = new ethers.JsonRpcProvider(`https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`);
-            const provider2 = new ethers.JsonRpcProvider(`https://rpc.ankr.com/eth_sepolia/${ETH_API_KEY}`);
+            
             let total_balance = 0;
             let total_balance2 = 0;
             let total_error = 0;
 
             for (const key of wallet.childKeys) {
-                const balance_in_wei = await provider.getBalance(key.address);
-                const balance_in_ether = ethers.formatEther(balance_in_wei);
-                total_balance += parseFloat(balance_in_ether);
-                const balance_in_wei2 = await provider2.getBalance(key.address);
-                const balance_in_ether2 = ethers.formatEther(balance_in_wei2);
-                total_balance2 += parseFloat(balance_in_ether2);
-                const error = Math.abs(parseFloat(balance_in_ether) - parseFloat(balance_in_ether2));
+                const balanceData = balances.find(b => b.address === key.address);
+                const balance_in_ether = balanceData ? balanceData.balance_qn : 'N/A';
+                const balance_in_ether2 = balanceData ? balanceData.balance_ankr : 'N/A';
+                
+                total_balance += parseFloat(balance_in_ether) || 0;
+                total_balance2 += parseFloat(balance_in_ether2) || 0;
+                
+                const error = Math.abs(parseFloat(balance_in_ether) - parseFloat(balance_in_ether2)) || 0;
                 total_error += error;
 
                 child_keys_html += `
