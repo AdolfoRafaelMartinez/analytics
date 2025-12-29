@@ -1,9 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-const ETH_API_KEY = process.env.ETH_API_KEY;
-
-import { ethers } from '/node_modules/ethers/dist/ethers.js';
-
 const get_balance = async () => {
     const address = document.getElementById('addressInput').value;
     const result_div = document.getElementById('walletInfo');
@@ -18,13 +12,21 @@ const get_balance = async () => {
     spinner.style.display = 'block';
 
     try {
-        const provider = new ethers.JsonRpcProvider(`https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`);
-        const balance_in_wei = await provider.getBalance(address);
-        const balance_in_ether = ethers.formatEther(balance_in_wei);
-        result_div.innerHTML = `Address: ${address}<br>Balance: ${balance_in_ether} ETH`;
+        const response = await fetch('/get_eth_balance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ address })
+        });
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        result_div.innerHTML = `Address: ${address}<br>Balance: ${data.balance} ETH`;
     } catch (error) {
         console.error('Error fetching balance:', error);
-        result_div.innerHTML = "Error fetching balance. Please check the address and try again.";
+        result_div.innerHTML = `Error fetching balance: ${error.message}`;
     } finally {
         spinner.style.display = 'none';
     }

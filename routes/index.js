@@ -42,6 +42,20 @@ router.get('/get_eth_balance', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'get_eth_balance.html'));
 });
 
+router.post('/get_eth_balance', async (req, res) => {
+    const { address } = req.body;
+
+    try {
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
+        const balance_in_wei = await provider.getBalance(address);
+        const balance_in_ether = ethers.formatEther(balance_in_wei);
+        res.json({ balance: balance_in_ether });
+    } catch (error) {
+        console.error('Error fetching ETH balance:', error);
+        res.status(500).json({ error: 'Error fetching ETH balance' });
+    }
+});
+
 router.get('/transfer_eth', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
