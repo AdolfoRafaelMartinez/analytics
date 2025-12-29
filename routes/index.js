@@ -66,11 +66,22 @@ router.post('/get_eth_balances', async (req, res) => {
         const provider_ankr = new ethers.JsonRpcProvider(ANKR_URL);
 
         const balances = await Promise.all(addresses.map(async (address) => {
-            const balance_qn_wei = await provider_qn.getBalance(address);
-            const balance_qn_ether = ethers.formatEther(balance_qn_wei);
+            let balance_qn_ether = 'N/A';
+            let balance_ankr_ether = 'N/A';
 
-            const balance_ankr_wei = await provider_ankr.getBalance(address);
-            const balance_ankr_ether = ethers.formatEther(balance_ankr_wei);
+            try {
+                const balance_qn_wei = await provider_qn.getBalance(address);
+                balance_qn_ether = ethers.formatEther(balance_qn_wei);
+            } catch (error) {
+                console.error(`Error fetching QN balance for ${address}:`, error.message);
+            }
+
+            try {
+                const balance_ankr_wei = await provider_ankr.getBalance(address);
+                balance_ankr_ether = ethers.formatEther(balance_ankr_wei);
+            } catch (error) {
+                console.error(`Error fetching Ankr balance for ${address}:`, error.message);
+            }
 
             return {
                 address,
@@ -82,7 +93,7 @@ router.post('/get_eth_balances', async (req, res) => {
         res.json(balances);
     } catch (error) {
         console.error('Error fetching ETH balances:', error);
-        res.status(500).json({ error: 'Error fetching ETH balances' });
+        res.status(500).json({ error: 'An unexpected error occurred while fetching ETH balances' });
     }
 });
 

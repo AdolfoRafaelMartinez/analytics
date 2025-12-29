@@ -84,7 +84,18 @@ async function create_wallet() {
                 },
                 body: JSON.stringify({ addresses })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Failed to fetch balances and parse error response' }));
+                throw new Error(errorData.error || 'Failed to fetch balances');
+            }
+            
             const balances = await response.json();
+
+            if (!Array.isArray(balances)) {
+                console.error('Expected balances to be an array, but received:', balances);
+                throw new Error('Invalid data format for balances received from the server.');
+            }
 
             let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style=\"font-weight:normal\">(bal)</span></th><th>ankr <span style=\"font-weight:normal\">(bal)</span></th><th>| error |</th></tr>';
             
