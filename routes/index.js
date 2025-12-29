@@ -8,7 +8,8 @@ import axios from 'axios';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
-const QN_ETH_URL = 'https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/7e04ac7ec10c33d61d587d0f0e7ba52ca61fc6ba/';
+const ETHAPIKEY = process.env.ETHAPIKEY;
+const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETHAPIKEY}/`;
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
@@ -135,7 +136,7 @@ router.post('/get_eth_transactions', async (req, res) => {
 
     try {
         const response = await axios.get(
-            `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${API_KEY}`
+            `https.api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=${API_KEY}`
         );
 
         res.json(response.data);
