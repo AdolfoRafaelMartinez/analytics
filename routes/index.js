@@ -237,9 +237,15 @@ router.post('/get_eth_transactions', async (req, res) => {
 router.post('/get_eth_transactions_by_address', async (req, res) => {
     const { address } = req.body;
     try {
-        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
-        const history = await provider.getHistory(address);
-        res.json(history);
+        const response = await axios.post(QN_ETH_URL, {
+            method: 'qn_getTransactionsByAddress',
+            params: [{
+                address: address
+            }],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+        res.json(response.data.result);
     } catch (error) {
         console.error('Error fetching ETH transactions by address:', error);
         res.status(500).json({ error: 'Error fetching ETH transactions by address' });

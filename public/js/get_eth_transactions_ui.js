@@ -13,15 +13,25 @@ const get_transactions = async (event) => {
             },
             body: JSON.stringify({ address })
         });
-        const data = await response.json();
-        if (data.result && data.result.paginatedItems && data.result.paginatedItems.length > 0) {
-            output_div.innerHTML = JSON.stringify(data.result.paginatedItems, null, 2);
+
+        const responseText = await response.text();
+        if (!responseText) {
+            throw new Error("Empty response from server.");
+        }
+        const data = JSON.parse(responseText);
+
+        if (response.status >= 400) {
+            throw new Error(data.error || "Server error");
+        }
+
+        if (data && data.paginatedItems && data.paginatedItems.length > 0) {
+            output_div.innerHTML = `<pre>${JSON.stringify(data.paginatedItems, null, 2)}</pre>`;
         } else {
             output_div.innerHTML = "No transactions found for this address.";
         }
     } catch (error) {
         console.error('Error fetching transactions:', error);
-        output_div.innerHTML = "Error fetching transactions. Please check the address and try again.";
+        output_div.innerHTML = `Error fetching transactions: ${error.message}`;
     }
 };
 
