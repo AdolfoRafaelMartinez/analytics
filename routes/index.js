@@ -15,7 +15,7 @@ const ETH_API_KEY = process.env.ETH_API_KEY;
 const BTC_API_KEY = process.env.BTC_API_KEY;
 const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pro/${ETH_API_KEY}/`;
 const ANKR_URL = `https://rpc.ankr.com/eth_sepolia`;
-const QN_BTC_URL = 'https://wispy-muddy-mound.btc-testnet4.quiknode.pro/${BTC_API_KEY}/'
+const QN_BTC_URL = `https://wispy-muddy-mound.btc-testnet4.quiknode.pro/${BTC_API_KEY}/`
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
@@ -102,7 +102,7 @@ router.get('/get_latest_btc_block', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block.html'));
 });
 
-router.get('/api/latest_btc_block', async (req, res) => {
+router.get('/api/get_latest_btc_block', async (req, res) => {
     try {
         const response = await axios.post(QN_BTC_URL, {
             method: 'getbestblockhash',
