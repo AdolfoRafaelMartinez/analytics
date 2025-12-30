@@ -284,7 +284,7 @@ router.get('/get_block_transactions_page', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_transactions_by_block.html'));
 });
 
-router.post('/used_to_be_python', async (req, res) => {
+router.post('/used_to_be_pytho', async (req, res) => {
     const { address } = req.body;
     if (!address) {
         return res.status(400).json({ error: 'Address is required' });
@@ -321,6 +321,21 @@ router.post('/used_to_be_python', async (req, res) => {
     } catch (error) {
         console.error('Error in /used_to_be_python route:', error);
         res.status(500).json({ error: 'An error occurred while fetching transactions' });
+    }
+});
+
+router.get('/get_latest_eth_block', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'latest_eth_block.html'));
+});
+
+router.get('/api/latest_eth_block', async (req, res) => {
+    try {
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
+        const block = await provider.getBlock('latest');
+        res.json(block);
+    } catch (error) {
+        console.error('Error fetching latest ETH block:', error);
+        res.status(500).json({ error: 'Error fetching latest ETH block' });
     }
 });
 
