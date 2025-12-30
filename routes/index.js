@@ -281,7 +281,47 @@ router.get('/get_block_transactions', async (req, res) => {
 });
 
 router.get('/get_block_transactions_page', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'get_block_transactions.html'));
+    res.sendFile(path.join(__dirname, '../views', 'get_transactions_by_block.html'));
+});
+
+router.post('/used_to_be_python', async (req, res) => {
+    const { address } = req.body;
+    if (!address) {
+        return res.status(400).json({ error: 'Address is required' });
+    }
+
+    try {
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
+        const ending_blocknumber = await provider.getBlockNumber();
+        const starting_blocknumber = ending_blocknumber - 100;
+        const tx_dictionary = {};
+
+        console.log(`Started filtering through block number ${starting_blocknumber} to ${ending_blocknumber} for transactions involving the address - ${address}...`);
+
+        for (let i = starting_blocknumber; i <= ending_blocknumber; i++) {
+            const block = await provider.getBlock(i, true);
+            if (block && block.transactions) {
+                for (const transaction of block.transactions) {
+                    if ((transaction.to && transaction.to.toLowerCase() === address.toLowerCase()) || (transaction.from && transaction.from.toLowerCase() === address.toLowerCase())) {
+                        tx_dictionary[transaction.hash] = transaction;
+                    }
+                }
+            }
+        }
+
+        fs.writeFileSync('transactions.json', JSON.stringify(tx_dictionary, null, 2));
+
+        const txCount = Object.keys(tx_dictionary).length;
+        console.log(`Finished searching blocks ${starting_blocknumber} through ${ending_blocknumber} and found ${txCount} transactions`);
+        res.json({
+            message: `Finished searching blocks and found ${txCount} transactions`,
+            count: txCount,
+            transactions: tx_dictionary
+        });
+    } catch (error) {
+        console.error('Error in /used_to_be_python route:', error);
+        res.status(500).json({ error: 'An error occurred while fetching transactions' });
+    }
 });
 
 export default router;
