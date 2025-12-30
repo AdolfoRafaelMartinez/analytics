@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get BTC Transactions by Block</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="schwab-container">
+        <h1>Get Bitcoin Transactions by Block Number</h1>
+        <div class="form-group">
+            <label for="blockNumber">Block Number:</label>
+            <input type="text" id="blockNumber" name="blockNumber" required>
+        </div>
+        <button id="getTransactionsByBlockBtn">Get Transactions</button>
+        <div class="result-container">
+            <h3>Result:</h3>
+            <pre id="transactionsByBlockResult"></pre>
+        </div>
+    </div>
+    <script src="/js/get_btc_transactions_by_block_ui.js"></script>
+</body>
+</html>

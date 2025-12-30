@@ -336,4 +336,62 @@ router.get('/api/latest_eth_block', async (req, res) => {
     }
 });
 
+router.get('/get_btc_transactions_by_block', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_transactions_by_block.html'));
+});
+
+router.post('/get_btc_transactions_by_block', async (req, res) => {
+    const { blockNumber } = req.body;
+
+    try {
+        // First, get the block hash for the given block number
+        const hashResponse = await axios.post(QN_BTC_URL, {
+            method: 'getblockhash',
+            params: [parseInt(blockNumber)],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+        const blockHash = hashResponse.data.result;
+
+        if (!blockHash) {
+            return res.status(404).json({ error: 'Block not found' });
+        }
+
+        // Then, get the block data which includes transaction details
+        const blockResponse = await axios.post(QN_BTC_URL, {
+            method: 'getblock',
+            params: [blockHash, 2], // Verbosity 2 for full transaction details
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        res.json(blockResponse.data.result);
+    } catch (error) {
+        console.error('Error fetching BTC transactions by block:', error);
+        res.status(500).json({ error: 'Error fetching BTC transactions by block' });
+    }
+});
+
+router.get('/get_btc_transaction_by_hash', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_transaction_by_hash.html'));
+});
+
+router.post('/get_btc_transaction_by_hash', async (req, res) => {
+    const { txHash } = req.body;
+
+    try {
+        const response = await axios.post(QN_BTC_URL, {
+            method: 'getrawtransaction',
+            params: [txHash, true],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        res.json(response.data.result);
+    } catch (error) {
+        console.error('Error fetching BTC transaction by hash:', error);
+        res.status(500).json({ error: 'Error fetching BTC transaction by hash' });
+    }
+});
+
 export default router;
