@@ -16,10 +16,6 @@ const QN_ETH_URL = `https://wandering-ancient-voice.ethereum-sepolia.quiknode.pr
 const ANKR_URL = `https://rpc.ankr.com/eth_sepolia`;
 const QN_BTC_URL = process.env.QN_BTC_URL;
 
-router.get('/api/key', (req, res) => {
-    res.json({ apiKey: ETH_API_KEY });
-});
-
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
@@ -101,8 +97,8 @@ router.get('/transfer_eth', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'transfer_eth.html'));
 });
 
-router.get('/latest_btc_block', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'latest_btc_block.html'));
+router.get('/get_latest_btc_block', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block.html'));
 });
 
 router.get('/api/latest_btc_block', async (req, res) => {
