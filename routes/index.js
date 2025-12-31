@@ -394,4 +394,26 @@ router.post('/get_btc_transaction_by_hash', async (req, res) => {
     }
 });
 
+router.get('/get_btc_block_by_hash', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_block_by_hash.html'));
+});
+
+router.post('/get-btc-block-by-hash', async (req, res) => {
+    const { blockHash } = req.body;
+
+    try {
+        const response = await axios.post(QN_BTC_URL, {
+            method: 'getblock',
+            params: [blockHash],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        res.json(response.data.result);
+    } catch (error) {
+        console.error('Error fetching BTC block by hash:', error);
+        res.status(500).json({ error: 'Error fetching BTC block by hash' });
+    }
+});
+
 export default router;
