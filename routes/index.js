@@ -416,4 +416,21 @@ router.post('/get_btc_block_by_hash', async (req, res) => {
     }
 });
 
+router.get('/get_eth_block_by_hash', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_eth_block_by_hash.html'));
+});
+
+router.post('/get_eth_block_by_hash', async (req, res) => {
+    const { block_hash } = req.body;
+
+    try {
+        const provider = new ethers.JsonRpcProvider(QN_ETH_URL);
+        const block = await provider.getBlock(block_hash);
+        res.json(block);
+    } catch (error) {
+        console.error('Error fetching ETH block by hash:', error);
+        res.status(500).json({ error: 'Error fetching ETH block by hash' });
+    }
+});
+
 export default router;

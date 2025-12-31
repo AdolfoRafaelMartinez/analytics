@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Get ETH Transactions</h1>
-    <form id="ethTransactionsForm">
-        <label for="address">Enter Ethereum Address:</label>
-        <input type="text" id="address" name="address" required>
-        <button type="submit">Get Transactions</button>
-    </form>
-    <pre id="output"></pre>
+    <div class="schwab-container">
+        <h1>Get ETH Transactions</h1>
+        <form id="ethTransactionsForm">
+            <div class="form-group">
+                <label for="address">Enter Ethereum Address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <button type="submit">Get Transactions</button>
+        </form>
+        <pre id="output"></pre>
+    </div>
 
     <script src="/js/get_eth_transactions_ui.js" type="module"></script>
 </body>

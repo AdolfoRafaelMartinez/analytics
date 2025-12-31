@@ -7,11 +7,15 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Get Bitcoin Wallet Balance</h1>
-    <input type="text" id="address_input" placeholder="Enter Bitcoin Address" style="width: 400px;"><br><br>
-    <button id="get_balance_button">Get Balance</button>
-    <div id="spinner" style="display: none;">Loading...</div>
-    <div id="wallet_info_div"></div>
+    <div class="schwab-container">
+        <h1>Get Bitcoin Wallet Balance</h1>
+        <div class="form-group">
+            <input type="text" id="address_input" placeholder="Enter Bitcoin Address" style="width: 400px;"><br><br>
+        </div>
+        <button id="get_balance_button">Get Balance</button>
+        <div id="spinner" style="display: none;">Loading...</div>
+        <div id="wallet_info_div"></div>
+    </div>
     <script src="js/get_btc_balance_ui.js" type="module"></script>
 </body>
 </html>
