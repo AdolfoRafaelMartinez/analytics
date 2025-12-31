@@ -398,7 +398,7 @@ router.get('/get_btc_block_by_hash', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_btc_block_by_hash.html'));
 });
 
-router.post('/get-btc-block-by-hash', async (req, res) => {
+router.post('/get_btc_block_by_hash', async (req, res) => {
     const { blockHash } = req.body;
 
     try {
