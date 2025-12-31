@@ -6,7 +6,7 @@ const network_selector = document.getElementById('networkSelector');
 const wallet_file = document.getElementById('walletFile');
 const wallet_details = document.getElementById('walletDetails');
 
-function truncate(str, n = 4) {
+function truncate(str, n = 40) {
     if (!str) return '';
     if (str.length > n * 2) {
         return str.slice(0, n) + '...' + str.slice(str.length - n);
@@ -46,8 +46,38 @@ async function create_wallet() {
 
         if (network === 'bitcoin-testnet4') {
             wallet = create_hd_wallet_bitcoin(mnemonic);
-            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th></tr>';
-            wallet.childKeys.forEach(key => {
+            const addresses = wallet.childKeys.map(key => key.address);
+
+            const response = await fetch('/get_btc_balances', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ addresses })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Failed to fetch balances and parse error response' }));
+                throw new Error(errorData.error || 'Failed to fetch balances');
+            }
+            
+            const balances = await response.json();
+
+            if (!Array.isArray(balances)) {
+                console.error('Expected balances to be an array, but received:', balances);
+                throw new Error('Invalid data format for balances received from the server.');
+            }
+
+            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>Balance</th></tr>';
+            
+            let total_balance = 0;
+
+            for (const key of wallet.childKeys) {
+                const balanceData = balances.find(b => b.address === key.address);
+                const balance = balanceData ? balanceData.balance : 'N/A';
+                
+                total_balance += parseFloat(balance) || 0;
+
                 const private_key = btoa(key.privateKey);
                 const public_key = btoa(key.publicKey);
                 child_keys_html += `
@@ -56,9 +86,16 @@ async function create_wallet() {
                         <td>${truncate(key.address)}</td>
                         <td>${truncate(private_key)}</td>
                         <td>${truncate(public_key)}</td>
+                        <td style="text-align: right;">${balance} BTC</td>
                     </tr>
                 `;
-            });
+            }
+            child_keys_html += `
+                <tr>
+                    <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
+                    <td style="text-align: right;"><strong>${total_balance.toFixed(8)} BTC</strong></td>
+                </tr>
+            `;
             child_keys_html += '</table>';
 
             wallet_info_html = `

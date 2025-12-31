@@ -7,6 +7,10 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { ethers } from 'ethers';
 import axios from 'axios';
+import bitcoin from 'bitcoinjs-lib';
+import { ECPairFactory } from 'ecpair';
+import * as ecc from '@bitcoinerlab/secp256k1';
+const ECPair = ECPairFactory(ecc);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -147,6 +151,36 @@ router.post('/get_btc_balance', async (req, res) => {
     } catch (error) {
         console.error('Error fetching BTC balance:', error);
         res.status(500).json({ error: 'Error fetching BTC balance' });
+    }
+});
+
+router.post('/get_btc_balances', async (req, res) => {
+    const { addresses } = req.body;
+
+    try {
+        const balances = await Promise.all(addresses.map(async (address) => {
+            let balance = 'N/A';
+            try {
+                const response = await axios.post(QN_BTC_URL, {
+                    method: 'getreceivedbyaddress',
+                    params: [address, 0],
+                    id: 1,
+                    jsonrpc: '2.0'
+                });
+                balance = response.data.result;
+            } catch (error) {
+                console.error(`Error fetching BTC balance for ${address}:`, error.message);
+            }
+            return {
+                address,
+                balance,
+            };
+        }));
+
+        res.json(balances);
+    } catch (error) {
+        console.error('Error fetching BTC balances:', error);
+        res.status(500).json({ error: 'An unexpected error occurred while fetching BTC balances' });
     }
 });
 
@@ -430,6 +464,90 @@ router.post('/get_eth_block_by_hash', async (req, res) => {
     } catch (error) {
         console.error('Error fetching ETH block by hash:', error);
         res.status(500).json({ error: 'Error fetching ETH block by hash' });
+    }
+});
+
+router.get('/transfer_btc', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'transfer_btc.html'));
+});
+
+router.post('/transfer-btc', async (req, res) => {
+    const { fromAddress, toAddress, amount, privateKey } = req.body;
+
+    try {
+        const network = bitcoin.networks.testnet;
+        const keyPair = ECPair.fromWIF(privateKey, network);
+        const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey, network });
+
+        if (address !== fromAddress) {
+            return res.status(400).json({ error: 'Private key does not match from address' });
+        }
+
+        const utxosResponse = await axios.post(QN_BTC_URL, {
+            method: 'qn_listunspent',
+            params: [fromAddress],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        const utxos = utxosResponse.data.result;
+
+        if (utxos.length === 0) {
+            return res.status(400).json({ error: 'No unspent transaction outputs found' });
+        }
+
+        const psbt = new bitcoin.Psbt({ network });
+        let totalInput = 0;
+
+        for (const utxo of utxos) {
+            totalInput += utxo.amount;
+            psbt.addInput({
+                hash: utxo.txid,
+                index: utxo.vout,
+                nonWitnessUtxo: Buffer.from(utxo.hex, 'hex'),
+            });
+        }
+
+        const amountInSatoshis = Math.floor(amount * 100000000);
+        const fee = 10000; // a fixed fee for simplicity
+        const change = totalInput - amountInSatoshis - fee;
+
+        if (totalInput < amountInSatoshis + fee) {
+            return res.status(400).json({ error: 'Insufficient funds' });
+        }
+
+        psbt.addOutput({
+            address: toAddress,
+            value: amountInSatoshis,
+        });
+
+        if (change > 0) {
+            psbt.addOutput({
+                address: fromAddress,
+                value: change,
+            });
+        }
+
+        for (let i = 0; i < utxos.length; i++) {
+            psbt.signInput(i, keyPair);
+        }
+
+        psbt.finalizeAllInputs();
+
+        const txHex = psbt.extractTransaction().toHex();
+
+        const sendResponse = await axios.post(QN_BTC_URL, {
+            method: 'sendrawtransaction',
+            params: [txHex],
+            id: 1,
+            jsonrpc: '2.0'
+        });
+
+        res.json({ txHash: sendResponse.data.result });
+
+    } catch (error) {
+        console.error('Error sending BTC transaction:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
