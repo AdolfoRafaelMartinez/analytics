@@ -63,11 +63,9 @@ pre {
 
 .columns-container {
     display: flex;
-    justify-content: space-between;
-}
-
-.column {
-    width: 30%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
 /* Schwab-like styling */
@@ -113,4 +111,28 @@ pre {
 .result-message.confirmed {
     background-color: green;
     color: white;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-grow: 1;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.card ul li {
+  margin-bottom: 10px;
 }
