@@ -21475,7 +21475,8 @@
       { href: "/get_btc_balance", text: "Balance" },
       { href: "/transfer_btc", text: "Transfer" },
       { href: "/get_btc_transactions_by_block", text: "Transactions by Block" },
-      { href: "/get_btc_transaction_by_hash", text: "Transaction by Hash" }
+      { href: "/get_btc_transaction_by_hash", text: "Transaction by Hash" },
+      { href: "/get_best_btc_hash", text: "Best Hash by RPC" }
     ];
     const ethereumLinks = [
       { href: "/get_latest_eth_block", text: "Latest Block" },

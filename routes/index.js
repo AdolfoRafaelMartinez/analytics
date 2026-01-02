@@ -421,7 +421,11 @@ router.post('/get_btc_transaction_by_hash', async (req, res) => {
             jsonrpc: '2.0'
         });
 
-        res.json(response.data.result);
+        if (response.data.result) {
+            res.json(response.data.result);
+        } else {
+            res.status(404).json({ error: 'Transaction not found' });
+        }
     } catch (error) {
         console.error('Error fetching BTC transaction by hash:', error);
         res.status(500).json({ error: 'Error fetching BTC transaction by hash' });
