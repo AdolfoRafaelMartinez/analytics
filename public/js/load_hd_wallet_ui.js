@@ -6,7 +6,7 @@ const network_selector = document.getElementById('networkSelector');
 const wallet_file = document.getElementById('walletFile');
 const wallet_details = document.getElementById('walletDetails');
 
-function truncate(str, n = 80) {
+function truncate(str, n = 4) {
     if (!str) return '';
     if (str.length > n * 2) {
         return str.slice(0, n) + '...' + str.slice(str.length - n);
@@ -48,7 +48,7 @@ async function create_wallet() {
             wallet = create_hd_wallet_bitcoin(mnemonic);
             const addresses = wallet.childKeys.map(key => key.address);
 
-            const response = await fetch('/get_btc_balances', {
+            /* const response = await fetch('/get_btc_balances', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,15 +66,15 @@ async function create_wallet() {
             if (!Array.isArray(balances)) {
                 console.error('Expected balances to be an array, but received:', balances);
                 throw new Error('Invalid data format for balances received from the server.');
-            }
+            } */
 
             let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>Balance</th></tr>';
             
             let total_balance = 0;
 
             for (const key of wallet.childKeys) {
-                const balanceData = balances.find(b => b.address === key.address);
-                const balance = balanceData ? balanceData.balance : 'N/A';
+                // const balanceData = balances.find(b => b.address === key.address);
+                const balance = (Math.random() * 0.01).toFixed(8);
                 
                 total_balance += parseFloat(balance) || 0;
 
@@ -114,7 +114,7 @@ async function create_wallet() {
             wallet = create_hd_wallet_ethereum(mnemonic);
             const addresses = wallet.childKeys.map(key => key.address);
 
-            const response = await fetch('/get_eth_balances', {
+            /* const response = await fetch('/get_eth_balances', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -132,18 +132,18 @@ async function create_wallet() {
             if (!Array.isArray(balances)) {
                 console.error('Expected balances to be an array, but received:', balances);
                 throw new Error('Invalid data format for balances received from the server.');
-            }
+            } */
 
-            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style=\"font-weight:normal\">(bal)</span></th><th>ankr <span style=\"font-weight:normal\">(bal)</span></th><th>| error |</th></tr>';
+            let child_keys_html = '<table border="1"><tr><th>Path</th><th>Address</th><th>Private Key</th><th>Public Key</th><th>quicknode <span style="font-weight:normal">(bal)</span></th><th>ankr <span style="font-weight:normal">(bal)</span></th><th>| error |</th></tr>';
             
             let total_balance = 0;
             let total_balance2 = 0;
             let total_error = 0;
 
             for (const key of wallet.childKeys) {
-                const balanceData = balances.find(b => b.address === key.address);
-                const balance_in_ether = balanceData ? balanceData.balance_qn : 'N/A';
-                const balance_in_ether2 = balanceData ? balanceData.balance_ankr : 'N/A';
+                // const balanceData = balances.find(b => b.address === key.address);
+                const balance_in_ether = (Math.random() * 0.1).toFixed(18);
+                const balance_in_ether2 = (Math.random() * 0.1).toFixed(18);
                 
                 total_balance += parseFloat(balance_in_ether) || 0;
                 total_balance2 += parseFloat(balance_in_ether2) || 0;
@@ -154,21 +154,21 @@ async function create_wallet() {
                 child_keys_html += `
                     <tr>
                         <td><strong>${key.path}</strong></td>
-                        <td><a href=\"https://sepolia.etherscan.io/address/${key.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${truncate(key.address)}</a></td>
+                        <td><a href="https://sepolia.etherscan.io/address/${key.address}" target="_blank" rel="noopener noreferrer">${truncate(key.address)}</a></td>
                         <td>${truncate(key.privateKey)}</td>
                         <td>${truncate(key.publicKey)}</td>
-                        <td style=\"text-align: right;\">${balance_in_ether} ETH</td>
-                        <td style=\"text-align: right;\">${balance_in_ether2} ETH</td>
-                        <td style=\"text-align: right;\">${error.toFixed(18)} ETH</td>
+                        <td style="text-align: right;">${balance_in_ether} ETH</td>
+                        <td style="text-align: right;">${balance_in_ether2} ETH</td>
+                        <td style="text-align: right;">${error.toFixed(18)} ETH</td>
                     </tr>
                 `;
             }
             child_keys_html += `
                 <tr>
-                    <td colspan=\"4\" style=\"text-align: right;\"><strong>Totals:</strong></td>
-                    <td style=\"text-align: right;\"><strong>${total_balance.toFixed(4)} ETH</strong></td>
-                    <td style=\"text-align: right;\"><strong>${total_balance2.toFixed(4)} ETH</strong></td>
-                    <td style=\"text-align: right;\"><strong>${total_error.toFixed(4)} ETH</strong></td>
+                    <td colspan="4" style="text-align: right;"><strong>Totals:</strong></td>
+                    <td style="text-align: right;"><strong>${total_balance.toFixed(4)} ETH</strong></td>
+                    <td style="text-align: right;"><strong>${total_balance2.toFixed(4)} ETH</strong></td>
+                    <td style="text-align: right;"><strong>${total_error.toFixed(4)} ETH</strong></td>
                 </tr>
             `;
             child_keys_html += '</table>';
@@ -177,7 +177,7 @@ async function create_wallet() {
                 <br>
                 <h3>parent:</h3>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>
-                <p>address: <a href=\"https://sepolia.etherscan.io/address/${wallet.root.address}\" target=\"_blank\" rel=\"noopener noreferrer\">${truncate(wallet.root.address)}</a></p>
+                <p>address: <a href="https://sepolia.etherscan.io/address/${wallet.root.address}" target="_blank" rel="noopener noreferrer">${truncate(wallet.root.address)}</a></p>
                 <p>privateKey: ${truncate(wallet.root.privateKey)}</p>
                 <p>publicKey: ${truncate(wallet.root.publicKey)}</p>
                 <div style=\"text-align: left; font-size: 2em; margin: 0.5em 0;\">&darr;</div>

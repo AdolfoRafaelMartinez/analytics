@@ -19,15 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ txHash })
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(result.error || 'Network response was not ok');
             }
 
-            const result = await response.json();
             transactionResult.textContent = JSON.stringify(result, null, 2);
         } catch (error) {
             console.error('Error fetching transaction:', error);
-            transactionResult.textContent = 'Error fetching transaction. See console for details.';
+            transactionResult.textContent = error.message;
         }
     });
 });
