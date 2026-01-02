@@ -21471,12 +21471,12 @@
     ];
     const bitcoinLinks = [
       { href: "/get_latest_btc_block", text: "Latest Block" },
+      { href: "/get_latest_btc_block_by_rpc", text: "Latest Block by RPC" },
       { href: "/get_btc_block_by_hash", text: "Block by Hash" },
       { href: "/get_btc_balance", text: "Balance" },
       { href: "/transfer_btc", text: "Transfer" },
       { href: "/get_btc_transactions_by_block", text: "Transactions by Block" },
-      { href: "/get_btc_transaction_by_hash", text: "Transaction by Hash" },
-      { href: "/get_best_btc_hash", text: "Best Hash by RPC" }
+      { href: "/get_btc_transaction_by_hash", text: "Transaction by Hash" }
     ];
     const ethereumLinks = [
       { href: "/get_latest_eth_block", text: "Latest Block" },

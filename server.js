@@ -15,8 +15,8 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 app.use(express.json());
 
-app.get('/get_best_btc_hash', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'get_best_btc_hash.html'));
+app.get('/get_latest_btc_block_by_rpc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'get_latest_btc_block_by_rpc.html'));
 });
 
 // Use the router
