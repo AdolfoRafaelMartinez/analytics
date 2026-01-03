@@ -20,9 +20,14 @@ app.get('/get_latest_btc_block_by_rpc', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'get_latest_btc_block_by_rpc.html'));
 });
 
+app.get('/get_btc_transaction_by_hash_by_rpc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'get_btc_transaction_by_hash_by_rpc.html'));
+});
+
+
 // Use the router
 app.use('/', indexRouter);
-app.use('/api', bitcoinRouter);
+app.use('/api/bitcoin', bitcoinRouter);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
