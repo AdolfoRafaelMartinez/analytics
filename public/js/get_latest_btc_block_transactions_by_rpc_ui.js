@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const data2 = await response2.json();
 
-        bestBtcHashResult.textContent = JSON.stringify(data2.tx, null, 2);
+        bestBtcHashResult.textContent = JSON.stringify(data2.result.tx, null, 2);
     } catch (error) {
         console.error('Error:', error);
         bestBtcHashResult.textContent = `Error: ${error.message}`;

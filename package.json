@@ -16,6 +16,7 @@
     "@bitcoinerlab/secp256k1": "^1.2.0",
     "@quicknode/sdk": "^2.5.2",
     "axios": "^1.13.2",
+    "bcrpc": "^0.4.0",
     "bip32": "^5.0.0-rc.0",
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.7",
