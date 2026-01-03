@@ -41,4 +41,14 @@ router.get('/getbestblocktransactions', async (req, res) => {
     }
 });
 
+router.get('/gettransaction/:hash', async (req, res) => {
+    try {
+        const txid = req.params.hash;
+        const transaction = await bitcoinRpc('getrawtransaction', [txid, true]);
+        res.json(transaction);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 export default router;
