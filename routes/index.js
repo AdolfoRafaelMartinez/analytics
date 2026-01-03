@@ -106,6 +106,15 @@ router.get('/get_latest_btc_block', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block.html'));
 });
 
+
+router.get('/get_latest_btc_block_by_rpc', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block_by_rpc.html'));
+});
+
+router.get('/get_latest_btc_block_transactions', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block_transactions.html'));
+});
+
 router.get('/api/get_latest_btc_block', async (req, res) => {
     try {
         const response = await axios.post(QN_BTC_URL, {
