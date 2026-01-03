@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import indexRouter from './routes/index.js';
+import bitcoinRouter from './routes/bitcoin.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +22,7 @@ app.get('/get_latest_btc_block_by_rpc', (req, res) => {
 
 // Use the router
 app.use('/', indexRouter);
+app.use('/api', bitcoinRouter);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
