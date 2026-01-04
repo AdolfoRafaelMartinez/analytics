@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const txHash = document.getElementById('txHash').value;
         try {
-            const response = await fetch(`/api/bitcoin/gettransaction/${txHash}`);
+            const response = await fetch(`/get_btc_transaction_by_hash_by_rpc/${txHash}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
