@@ -21,7 +21,7 @@ async function bitcoinRpc(method, params) {
     return data.result;
 }
 
-router.get('/getbestblock', async (req, res) => {
+router.get('/api/get_latest_btc_block_by_rpc', async (req, res) => {
     try {
         const bestBlockHash = await bitcoinRpc('getbestblockhash', []);
         const block = await bitcoinRpc('getblock', [bestBlockHash]);
@@ -31,7 +31,7 @@ router.get('/getbestblock', async (req, res) => {
     }
 });
 
-router.get('/getbestblocktransactions', async (req, res) => {
+router.get('/api/get_latest_btc_block_transactions_by_rpc', async (req, res) => {
     try {
         const bestBlockHash = await bitcoinRpc('getbestblockhash', []);
         const block = await bitcoinRpc('getblock', [bestBlockHash]);

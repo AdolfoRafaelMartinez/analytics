@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import routes from './routes.js';
+import indexRouter from './routes/index.js';
 import bitcoinRouter from './routes/bitcoin.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,8 +17,8 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use(express.json());
 
 // Use the router
-app.use('/', routes);
-app.use('/api/bitcoin', bitcoinRouter);
+app.use('/', indexRouter);
+app.use('/', bitcoinRouter);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

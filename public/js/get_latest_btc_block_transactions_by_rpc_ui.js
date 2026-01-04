@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bestBtcHashResult = document.getElementById('bestBtcHashResult');
 
     try {
-        const response = await fetch('/api/getbestblocktransactions');
+        const response = await fetch('/api/get_latest_btc_block_transactions_by_rpc');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
