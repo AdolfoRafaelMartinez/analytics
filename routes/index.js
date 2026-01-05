@@ -106,15 +106,6 @@ router.get('/get_latest_btc_block', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block.html'));
 });
 
-
-router.get('/get_latest_btc_block_by_rpc', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block_by_rpc.html'));
-});
-
-router.get('/get_latest_btc_block_transactions_by_rpc', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'get_latest_btc_block_transactions_by_rpc.html'));
-});
-
 router.get('/api/get_latest_btc_block', async (req, res) => {
     try {
         const response = await axios.post(QN_BTC_URL, {
@@ -439,10 +430,6 @@ router.post('/get_btc_transaction_by_hash', async (req, res) => {
         console.error('Error fetching BTC transaction by hash:', error);
         res.status(500).json({ error: 'Error fetching BTC transaction by hash' });
     }
-});
-
-router.get('/get_btc_transaction_by_hash_by_rpc', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'get_btc_transaction_by_hash_by_rpc.html'));
 });
 
 router.get('/get_btc_block_by_hash', (req, res) => {
