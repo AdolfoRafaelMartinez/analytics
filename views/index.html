@@ -3,52 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Crypto Wallet</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Digital Assets Analytics</h1>
-    <div class="columns-container">
-        <div class="link-card">
-            <h2>Wallet</h2>
-            <ul>
-                <li><a href="/create_wallet">Create HD Wallet</a></li>
-                <li><a href="/load_hd_wallet">Load HD Wallet</a></li>
-            </ul>
-        </div>
-        <div class="link-card">
-            <h2>Bitcoin RPC</h2>
-            <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">publicnode.com</span></div>
-            <ul>
-                <li><a href="/get_latest_btc_block_by_rpc">Latest Block by RPC</a></li>
-                <li><a href="/get_latest_btc_block_transactions_by_rpc">Latest Block Transactions by RPC</a></li>
-                <li><a href="/get_btc_transaction_by_hash_by_rpc">Transaction by Hash using RPC</a></li>
-            </ul>
-        </div>
-        <div class="link-card">
-            <h2>Bitcoin</h2>
-            <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">quiknode.pro</span></div>
-            <ul>
-                <li><a href="/get_latest_btc_block">Latest Block</a></li>
-                <li><a href="/get_btc_block_by_hash">Block by Hash</a></li>
-                <li><a href="/get_btc_balance">Balance</a></li>
-                <li><a href="/transfer_btc">Transfer</a></li>
-                <li><a href="/get_btc_transactions_by_block">Transactions by Block</a></li>
-                <li><a href="/get_btc_transaction_by_hash">Transaction by Hash</a></li>
-            </ul>
-        </div>
-        <div class="link-card">
-            <h2>Ethereum</h2>
-            <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">quiknode.pro</span></div>
-            <ul>
-                <li><a href="/get_latest_eth_block">Latest Block</a></li>
-                <li><a href="/get_eth_block_by_hash">Block by Hash</a></li>
-                <li><a href="/get_eth_balance">Balance</a></li>
-                <li><a href="/transfer_eth">Transfer</a></li>
-                <li><a href="/get_transaction_by_hash_page">Transaction by Hash</a></li>
-                <li><a href="/get_eth_transactions">Transactions by Address</a></li>
-                <li><a href="/get_block_transactions_page">Transactions by Block</a></li>
-            </ul>
+    <div class="container">
+        <h1>Welcome to the Crypto Wallet!</h1>
+        <p>This is a simple application to interact with Bitcoin and Ethereum.</p>
+        <div class="link-container">
+            <div class="link-card">
+                <h2>Multi-coin Wallet</h2>
+                <ul>
+                    <li><a href="/create_wallet">Create Wallet</a></li>
+                    <li><a href="/load_hd_wallet">Load HD Wallet</a></li>
+                </ul>
+            </div>
+            <div class="link-card">
+                <h2>Bitcoin RPC</h2>
+                <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">publicnode.com</span></div>
+                <ul>
+                    <li><a href="/get_latest_btc_block_by_rpc">Latest Block using RPC</a></li>
+                    <li><a href="/get_latest_btc_block_transactions_by_rpc">Latest Block Transactions using RPC</a></li>
+                    <li><a href="/get_btc_transaction_by_hash_by_rpc">Transaction by Hash using RPC</a></li>
+                    <li><a href="/get_btc_balance">Balance using RPC</a></li>
+                </ul>
+            </div>
+            <div class="link-card">
+                <h2>Bitcoin</h2>
+                <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">quiknode.pro</span></div>
+                <ul>
+                    <li><a href="/get_latest_btc_block">Latest Block</a></li>
+                    <li><a href="/get_btc_block_by_hash">Block by Hash</a></li>
+                    <li><a href="/transfer_btc">Transfer</a></li>
+                    <li><a href="/get_btc_transactions_by_block">Transactions by Block</a></li>
+                    <li><a href="/get_btc_transaction_by_hash">Transaction by Hash</a></li>
+                </ul>
+            </div>
+            <div class="link-card">
+                <h2>Ethereum</h2>
+                <div style="text-align: center; margin-top: -15px;"><span style="font-size: smaller; color: gray;">quiknode.pro</span></div>
+                <ul>
+                    <li><a href="/latest_eth_block">Latest Block</a></li>
+                    <li><a href="/get_eth_block_by_hash">Block by Hash</a></li>
+                    <li><a href="/get_eth_balance">Balance</a></li>
+                    <li><a href="/transfer_eth">Transfer</a></li>
+                    <li><a href="/get_eth_transactions">Transactions by Block</a></li>
+                    <li><a href="/get_transaction_by_hash">Transaction by Hash</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
