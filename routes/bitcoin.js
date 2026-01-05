@@ -2,6 +2,7 @@ import express from 'express';
 const router = express.Router();
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Core } from '@quicknode/sdk';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -25,14 +26,48 @@ async function bitcoinRpc(method, params) {
     return data.result;
 }
 
-router.post('/get_btc_balance_by_rpc', async (req, res) => {
+router.post('/get_btc_balance', async (req, res) => {
     try {
         const { address } = req.body;
         if (!address) {
             return res.status(400).json({ error: 'Address is required' });
         }
-        const unspent = await bitcoinRpc('listunspent', [0, 100, [address]]);
+        const unspent = await bitcoinRpc('listunspent', [0, 9999999, [address]]);
         const balance = unspent.reduce((sum, utxo) => sum + utxo.amount, 0);
+        res.json({ balance });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const getBalanceWithSDK = async (address, endpointUrl) => {
+  const core = new Core({
+    endpointUrl: endpointUrl,
+  });
+
+  try {
+    const balance = await core.client.getBalance({
+      address: address,
+    });
+    return balance;
+  } catch (error) {
+    console.error("Error fetching balance:", error);
+    throw error;
+  }
+};
+
+router.get('/get_btc_balance_sdk', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_balance_sdk.html'));
+});
+
+router.post('/get_btc_balance_sdk', async (req, res) => {
+    try {
+        const { address } = req.body;
+        if (!address) {
+            return res.status(400).json({ error: 'Address is required' });
+        }
+        const QUICKNODE_URL = `https://wispy-muddy-mound.btc-testnet4.quiknode.pro/YOUR_API_KEY_HERE/`;
+        const balance = await getBalanceWithSDK(address, QUICKNODE_URL);
         res.json({ balance });
     } catch (error) {
         res.status(500).json({ error: error.message });
