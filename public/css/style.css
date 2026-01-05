@@ -64,7 +64,6 @@ pre {
 .columns-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 20px;
 }
 
@@ -75,7 +74,6 @@ pre {
     padding: 20px;
     border-radius: 5px;
     max-width: 500px;
-    margin: 0 auto;
 }
 
 .form-group {
@@ -135,8 +133,4 @@ pre {
 
 .card ul li {
   margin-bottom: 10px;
-}
-
-.link-card h2 {
-    text-align: center;
 }
