@@ -136,3 +136,7 @@ pre {
 .card ul li {
   margin-bottom: 10px;
 }
+
+.link-card h2 {
+    text-align: center;
+}
