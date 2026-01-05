@@ -11,7 +11,8 @@ const BTC_API_KEY = process.env.BTC_API_KEY;
 const QN_BTC_URL = `https://wispy-muddy-mound.btc-testnet4.quiknode.pro/${BTC_API_KEY}/`
 
 async function bitcoinRpc(method, params) {
-    const response = await fetch('https://bitcoin-testnet-rpc.publicnode.com', {
+ // const response = await fetch('https://bitcoin-testnet-rpc.publicnode.com', {
+    const response = await fetch('https://bitcoin-mainnet.g.alchemy.com/v2/E-Xoamf6OPWrSJMgXFf6R', {
         method: 'POST',
         headers: {
             'Content-Type': 'text/plain',
@@ -19,10 +20,11 @@ async function bitcoinRpc(method, params) {
         body: JSON.stringify({
             jsonrpc: '1.0',
             id: 'curltest',
-            method,
-            params,
+            method: method,
+            params: params 
         }),
     });
+
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -36,7 +38,7 @@ router.post('/get_btc_balance_by_rpc', async (req, res) => {
         if (!address) {
             return res.status(400).json({ error: 'Address is required' });
         }
-        const unspent = await bitcoinRpc('listunspent', [0, 9999999, [address]]);
+        const unspent = await bitcoinRpc('listunspent', [0, 100, `[\"${address}\"]`]);
         const balance = unspent.reduce((sum, utxo) => sum + utxo.amount, 0);
         res.json({ balance });
     } catch (error) {
