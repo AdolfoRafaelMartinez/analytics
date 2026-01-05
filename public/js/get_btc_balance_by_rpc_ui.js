@@ -12,7 +12,7 @@ document.getElementById('get_balance_button').addEventListener('click', async ()
     wallet_info_div.innerHTML = '';
 
     try {
-        const response = await fetch('/get_btc_balance', {
+        const response = await fetch('/get_btc_balance_by_rpc', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

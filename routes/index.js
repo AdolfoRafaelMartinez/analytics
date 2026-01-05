@@ -133,26 +133,26 @@ router.get('/load_wallet_view', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'load_wallet_view.html'));
 });
 
-router.get('/get_btc_balance', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'get_btc_balance.html'));
+router.get('/get_btc_balance_by_rpc', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_balance_by_rpc.html'));
 });
 
-router.post('/get_btc_balance', async (req, res) => {
-    const { address } = req.body;
-
-    try {
-        const response = await axios.post(QN_BTC_URL, {
-            method: 'getreceivedbyaddress',
-            params: [address, 0],
-            id: 1,
-            jsonrpc: '2.0'
-        });
-        res.json({ balance: response.data.result });
-    } catch (error) {
-        console.error('Error fetching BTC balance:', error);
-        res.status(500).json({ error: 'Error fetching BTC balance' });
-    }
-});
+// router.post('/get_btc_balance_by_rpc', async (req, res) => {
+//     const { address } = req.body;
+//
+//     try {
+//         const response = await axios.post(QN_BTC_URL, {
+//             method: 'getreceivedbyaddress',
+//             params: [address, 0],
+//             id: 1,
+//             jsonrpc: '2.0'
+//         });
+//         res.json({ balance: response.data.result });
+//     } catch (error) {
+//         console.error('Error fetching BTC balance:', error);
+//         res.status(500).json({ error: 'Error fetching BTC balance' });
+//     }
+// });
 
 router.post('/get_btc_balances', async (req, res) => {
     const { addresses } = req.body;

@@ -25,13 +25,13 @@ async function bitcoinRpc(method, params) {
     return data.result;
 }
 
-router.post('/get_btc_balance', async (req, res) => {
+router.post('/get_btc_balance_by_rpc', async (req, res) => {
     try {
         const { address } = req.body;
         if (!address) {
             return res.status(400).json({ error: 'Address is required' });
         }
-        const unspent = await bitcoinRpc('listunspent', [0, 9999999, [address]]);
+        const unspent = await bitcoinRpc('listunspent', [0, 100, [address]]);
         const balance = unspent.reduce((sum, utxo) => sum + utxo.amount, 0);
         res.json({ balance });
     } catch (error) {
