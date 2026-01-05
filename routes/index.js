@@ -441,6 +441,10 @@ router.post('/get_btc_transaction_by_hash', async (req, res) => {
     }
 });
 
+router.get('/get_btc_transaction_by_hash_by_rpc', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'get_btc_transaction_by_hash_by_rpc.html'));
+});
+
 router.get('/get_btc_block_by_hash', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'get_btc_block_by_hash.html'));
 });

@@ -1,6 +1,6 @@
 .env
 *.swp
-wallet_*.json
+wallet*.json
 .DS_Store
 mnemonic.txt
 node_modules
