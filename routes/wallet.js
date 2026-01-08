@@ -1,10 +1,9 @@
-
 import express from 'express';
 import * as bitcoin from 'bitcoinjs-lib';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import { ethers } from 'ethers';
-import * as secp from '@noble/secp256k1';
+import secp from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 
 const ECPair = ECPairFactory(secp);
