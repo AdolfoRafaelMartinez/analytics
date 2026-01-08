@@ -1,11 +1,12 @@
 import express from 'express';
 import * as bitcoin from 'bitcoinjs-lib';
 import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
+import { BIP32Factory } from 'bip32';
 import { ethers } from 'ethers';
-import secp from 'tiny-secp256k1';
-import ECPairFactory from 'ecpair';
+import * as secp from 'tiny-secp256k1';
+import { ECPairFactory } from 'ecpair';
 
+const bip32 = BIP32Factory(secp);
 const ECPair = ECPairFactory(secp);
 const router = express.Router();
 
